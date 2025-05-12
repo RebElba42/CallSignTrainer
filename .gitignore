@@ -1,0 +1,25 @@
+# MAMP spezifische Dateien und Verzeichnisse
+.DS_Store
+Thumbs.db
+
+# PHP spezifische Dateien
+*.log
+*.cache
+
+# Composer
+/vendor/
+/composer.lock
+
+# Umgebungsdateien
+.env
+.env.local
+
+# IDEs und Editoren
+/.idea/
+/.vscode/
+/*.sublime-workspace
+/*.sublime-project
+
+# Betriebssystem spezifisch
+ehthumbs.db
+Icon?
