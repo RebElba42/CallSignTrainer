@@ -1,0 +1,22 @@
+{
+    "headline": "Amateur Radio Callsign Morse Quiz",
+    "start": "Start",
+    "pause": "Pause",
+    "resume": "Resume",
+    "next": "Next callsign",
+    "auto": "Automatic",
+    "wpm": "WPM",
+    "pause_seconds": "Pause (sec)",
+    "repeat": "Repeats",
+    "noise": "Noise",
+    "noise_help": "Simulate radio noise (0 = off, 100 = very strong)",
+    "qsb": "QSB (fading)",
+    "qsb_help": "Simulates volume fading like in real radio (0 = off, 100 = maximum)",
+    "new_call": "Preparing new callsign...",
+    "playing": "Playing Morse code",
+    "solution": "The callsign was:",
+    "press_start": "Press <b>Start</b> to begin the quiz.",
+    "error_loading": "Error loading callsigns.",
+    "new_round": "New round!",
+    "settings": "Settings"
+}

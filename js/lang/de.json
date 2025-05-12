@@ -1,0 +1,22 @@
+{
+    "headline": "Amateurfunkrufzeichen Morse Quiz",
+    "start": "Start",
+    "pause": "Pausieren",
+    "resume": "Fortsetzen",
+    "next": "Nächstes Rufzeichen",
+    "auto": "Automatik",
+    "wpm": "WPM",
+    "pause_seconds": "Pause (Sek)",
+    "repeat": "Wiederholungen",
+    "noise": "Rauschen",
+    "noise_help": "Funkrauschen simulieren (0 = aus, 100 = sehr stark)",
+    "qsb": "QSB (Schwund)",
+    "qsb_help": "Simuliert Lautstärkeschwankungen wie im Funkbetrieb (0 = aus, 100 = maximal)",
+    "new_call": "Neues Rufzeichen wird vorbereitet...",
+    "playing": "Morse-Code wird abgespielt",
+    "solution": "Das Rufzeichen war:",
+    "press_start": "Drücke <b>Start</b>, um das Quiz zu beginnen.",
+    "error_loading": "Fehler beim Laden der Rufzeichen.",
+    "new_round": "Neue Runde!",
+    "settings": "Einstellungen"
+}

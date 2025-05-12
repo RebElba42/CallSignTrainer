@@ -2,6 +2,11 @@
 .DS_Store
 Thumbs.db
 
+#Test Dateien
+Test*.html
+*sic*
+
+
 # PHP spezifische Dateien
 *.log
 *.cache
