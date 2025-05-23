@@ -1,38 +1,49 @@
 # CallSignTrainer
 
-CallSignTrainer ist eine Webanwendung zum Üben und Trainieren von Amateurfunk-Rufzeichen in Morsetelegrafie (CW).
+CallSignTrainer is a web application for practicing and training amateur radio call signs in Morse code (CW).
 
-## Funktionen
+## Features
 
-- Zufällige Auswahl und Wiedergabe von Amateurfunk-Rufzeichen als Morsecode (CW)
-- Einstellbare Geschwindigkeit (WPM), Pausenlänge, Wiederholungen, Rauschpegel und QSB-Simulation
-- Sprachausgabe für Hinweise und Lösungen (Text-to-Speech)
-- Zwei Sprachen: Deutsch und Englisch
-- Unterstützt Desktop- und Mobilbrowser (inkl. Firefox, Safari, Chrome)
-- Automatik- und manueller Modus
+- Random selection and playback of amateur radio call signs as Morse code (CW)
+- Adjustable speed (WPM), pause duration, repetitions, noise level, and QSB simulation
+- Speech output for hints and solutions (Text-to-Speech)
+- Two languages: German and English
+- Supports desktop and mobile browsers (including Firefox, Safari, Chrome)
+- Automatic and manual mode
 
-## Bedienung
+## Usage
 
-1. **Start**: Auf „Start“ klicken, um das Training zu beginnen.
-2. **Einstellungen**: Geschwindigkeit, Pausen, Wiederholungen, Rauschen und QSB nach Wunsch anpassen.
-3. **Pause/Weiter**: Training kann jederzeit pausiert und fortgesetzt werden.
-4. **Sprache**: Deutsch oder Englisch auswählbar.
+1. **Start**: Click "Start" to begin the training.
+2. **Settings**: Adjust speed, pause, repetitions, noise, and QSB as desired.
+3. **Pause/Resume**: You can pause and resume the training at any time.
+4. **Language**: Select German or English.
 
-## Hinweise
+## Notes
 
-- Auf Mobilgeräten muss der Ton ggf. erst durch einen Klick aktiviert werden.
-- Bei iOS-Geräten darf der Stummschalter nicht aktiviert sein, sonst bleibt das Morse-Rauschen stumm.
+- On mobile devices, you may need to activate sound by clicking a button.
+- On iOS devices, make sure the mute switch is off, otherwise Morse noise will be muted.
 
 ## Installation
 
-1. Repository klonen oder herunterladen
-2. Im Browser öffnen (z.B. über einen lokalen Webserver wie MAMP/XAMPP oder direkt auf einen Webserver hochladen)
-3. Die Anwendung ist sofort nutzbar
+1. Clone or download the repository.
+2. Open in your browser (e.g., via a local web server like MAMP/XAMPP or upload directly to a web server).
+3. The application is ready to use.
 
-## Lizenz
+## Screenshots
+
+### Main Screen
+![Main Screen](images/screenshot_main.jpg)
+
+### New Round
+![New Round](images/screenshot_new_round.jpg)
+
+### End of Round
+![End of Round](images/screenshot_end_round.jpg)
+
+## License
 
 MIT License
 
 ---
 
-Viel Spaß beim Trainieren!
+Enjoy training!
