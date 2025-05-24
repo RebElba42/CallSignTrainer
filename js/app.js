@@ -207,6 +207,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }, (time - ctx.currentTime) * 1000);
     }
 
+    function doPreCall(nextStep) {
+        const preCallMode = localStorage.getItem('preCallMode') || 'speech';
+        if (preCallMode === 'speech') {
+            // Speech output (language-dependent)
+            if ('speechSynthesis' in window) {
+                const langObj = availableLanguages.find(l => l.code === lang);
+                const utter = new SpeechSynthesisUtterance(
+                    t('pre_call_speech')
+                );
+                utter.lang = langObj ? langObj.voice : 'de-DE';
+                utter.onend = nextStep;
+                window.speechSynthesis.speak(utter);
+            } else {
+                nextStep();
+            }
+        } else {
+            // Morse "V V V"
+            const vvv = textToMorse('V V V');
+            // Save current settings
+            const oldNoise = noiseLevel;
+            const oldQsb = qsbLevel;
+            noiseLevel = 0;
+            qsbLevel = 0;
+            playMorse(vvv, wpm, () => {
+                // Restore settings
+                noiseLevel = oldNoise;
+                qsbLevel = oldQsb;
+                nextStep();
+            });
+        }
+    }    
+
     // Start the next quiz round
     function quizNext() {
         result.innerHTML = '';
@@ -222,50 +254,44 @@ document.addEventListener('DOMContentLoaded', () => {
             ⭐ ${t('new_round')} ⭐<br>
             <small>${t('new_call')}</small>
         </div>
-    `;
-        if ('speechSynthesis' in window) {
-            const langObj = availableLanguages.find(l => l.code === lang);
-            const utter = new SpeechSynthesisUtterance(
-                `${t('new_round')}. ${t('new_call')}`
-            );
-            utter.lang = langObj ? langObj.voice : 'de-DE';
-            window.speechSynthesis.speak(utter);
-        }
+        `;
 
-        // After pause, play Morse code
-        setTimeout(() => {
-            let played = 0;
-            function repeatMorse() {
-                if (isPaused) {
-                    pauseCallback = repeatMorse;
-                    stopNoise();
-                    return;
+        // Pre-call announcement (speech or VVV), then pause, then Morse code
+        doPreCall(() => {
+            setTimeout(() => {
+                let played = 0;
+                function repeatMorse() {
+                    if (isPaused) {
+                        pauseCallback = repeatMorse;
+                        stopNoise();
+                        return;
+                    }
+                    if (played < repeatCount) {
+                        const morse = textToMorse(call);
+                        quizContainer.innerHTML = `<div class="alert alert-info text-center py-3">${t('playing')}<br><span class="badge bg-secondary">${played + 1} / ${repeatCount}</span></div>`;
+                        playMorse(morse, wpm, () => {
+                            played++;
+                            if (played < repeatCount) {
+                                setTimeout(() => {
+                                    if (isPaused) {
+                                        pauseCallback = repeatMorse;
+                                        stopNoise();
+                                    } else {
+                                        repeatMorse();
+                                    }
+                                }, pauseSeconds * 1000);
+                            } else {
+                                setTimeout(() => {
+                                    showResult(call);
+                                }, pauseSeconds * 1000);
+                            }
+                        });
+                    }
                 }
-                if (played < repeatCount) {
-                    const morse = textToMorse(call);
-                    quizContainer.innerHTML = `<div class="alert alert-info text-center py-3">${t('playing')}<br><span class="badge bg-secondary">${played + 1} / ${repeatCount}</span></div>`;
-                    playMorse(morse, wpm, () => {
-                        played++;
-                        if (played < repeatCount) {
-                            setTimeout(() => {
-                                if (isPaused) {
-                                    pauseCallback = repeatMorse;
-                                    stopNoise();
-                                } else {
-                                    repeatMorse();
-                                }
-                            }, pauseSeconds * 1000);
-                        } else {
-                            setTimeout(() => {
-                                showResult(call);
-                            }, pauseSeconds * 1000);
-                        }
-                    });
-                }
-            }
-            repeatMorse();
-        }, pauseSeconds * 1000);
-    }
+                repeatMorse();
+            }, pauseSeconds * 1000);
+        });
+        } 
 
     // Show the solution and speak it
     function showResult(call) {
@@ -366,8 +392,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             </div>
+            <div class="col-12 mb-2">
+                <label class="form-label mb-0 small w-100">${t('pre_call_announcement')}</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="preCallMode" id="preCallSpeech" value="speech" ${localStorage.getItem('preCallMode') !== 'vvv' ? 'checked' : ''}>
+                    <label class="form-check-label" for="preCallSpeech">${t('pre_call_speech_v')}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="preCallMode" id="preCallVVV" value="vvv" ${localStorage.getItem('preCallMode') === 'vvv' ? 'checked' : ''}>
+                    <label class="form-check-label" for="preCallVVV">${t('pre_call_morse_v')}</label>
+                </div>
+            </div>            
         </form>
     `;
+        // Event listener for pre-call mode
+        document.querySelectorAll('input[name="preCallMode"]').forEach(el => {
+            el.addEventListener('change', (e) => {
+                localStorage.setItem('preCallMode', e.target.value);
+            });
+        });    
+
         document.getElementById('wpmInput').addEventListener('change', (e) => {
             wpm = Math.max(10, Math.min(40, Number(e.target.value)));
             localStorage.setItem('wpm', wpm);

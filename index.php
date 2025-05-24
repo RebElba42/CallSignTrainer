@@ -31,8 +31,8 @@
     <footer class="bg-secondary bg-gradient text-light py-3 mt-5">
         <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
             <div>
-                <span class="fw-bold">CallSignTrainer</span> &copy; 2025 RebElba
-                &middot; <a href="LICENSE" class="link-light link-underline-opacity-0" target="_blank">MIT License</a>
+                <span class="fw-bold">CallSign Trainer</span> &copy; 2025 DB4REB
+                &middot; <a href="https://github.com/RebElba42/CallSignTrainer/blob/main/LICENSE" class="link-light link-underline-opacity-0" target="_blank">MIT License</a>
             </div>
             <div class="small mt-2 mt-md-0">
                 <span>Source code on <a href="https://github.com/RebElba42/CallSignTrainer" class="link-light" target="_blank">GitHub</a></span>

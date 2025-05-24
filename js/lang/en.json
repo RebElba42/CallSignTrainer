@@ -18,5 +18,9 @@
     "press_start": "Press <b>Start</b> to begin the quiz.",
     "error_loading": "Error loading callsigns.",
     "new_round": "New round!",
-    "settings": "Settings"
+    "settings": "Settings",
+    "pre_call_announcement": "Pre-call Announcement",
+    "pre_call_speech_v": "Speech",
+    "pre_call_morse_v": "Morse 'V V V'",
+    "pre_call_speech": "New call sign is being prepared"
 }

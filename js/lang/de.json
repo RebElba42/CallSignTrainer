@@ -18,5 +18,9 @@
     "press_start": "Drücke <b>Start</b>, um das Quiz zu beginnen.",
     "error_loading": "Fehler beim Laden der Rufzeichen.",
     "new_round": "Neue Runde!",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "pre_call_announcement": "Ankündigung neues Rufzeichen",
+    "pre_call_speech_v": "Ansage",
+    "pre_call_morse_v": "Morsen 'V V V'",
+    "pre_call_speech": "Neues Rufzeichen wird vorbereitet"
 }
