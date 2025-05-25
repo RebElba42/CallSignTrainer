@@ -1,3 +1,9 @@
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
 }
+/* Limit the max width for desktop, keep mobile full width */
+@media (min-width: 992px) {
+    .container {
+        max-width: 700px;
+    }
+}

@@ -2,6 +2,30 @@
 // Released under the MIT License. See LICENSE file for details.
 
 document.addEventListener('DOMContentLoaded', () => {
+    let wakeLock = null;
+
+    // Try to request a wake lock (prevent screen from sleeping)
+    async function requestWakeLock() {
+        try {
+            if ('wakeLock' in navigator) {
+                wakeLock = await navigator.wakeLock.request('screen');
+                wakeLock.addEventListener('release', () => {
+                    //console.log('Wake Lock was released');
+                });
+                //console.log('Wake Lock is active');
+            }
+        } catch (err) {
+            console.log('Wake Lock error:', err);
+        }
+    }
+
+    // Re-acquire wake lock on visibility change (e.g. after screen off)
+    document.addEventListener('visibilitychange', () => {
+        if (wakeLock !== null && document.visibilityState === 'visible') {
+            requestWakeLock();
+        }
+    });
+
     // Get important DOM elements
     const quizContainer = document.getElementById('quiz-container');
     const controls = document.getElementById('controls');
@@ -130,6 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (e) { }
         }
     }
+
+
 
     // Stop the noise (white noise)
     function stopNoise() {
@@ -331,6 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         document.getElementById('pauseBtn').onclick = () => {
             if (!isStarted) {
+                requestWakeLock();
                 unlockAudioContext();
                 isStarted = true;
                 isPaused = false;
