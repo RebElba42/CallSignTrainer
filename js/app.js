@@ -40,18 +40,30 @@ document.addEventListener('DOMContentLoaded', () => {
         { code: 'en', name: 'English', flag: '🇬🇧', file: 'js/lang/en.json', voice: 'en-US' }
     ];
 
+    const DEFAULTS = {
+        wpm: 20,
+        pauseSeconds: 5,
+        repeatCount: 3,
+        noiseLevel: 28,
+        qsbLevel: 62,
+        autoMode: true,
+        preCallMode: 'vvv',
+        lang: 'de'
+    };
+
     // Global variables for settings and state
     let availableLanguages = [];
     let loadedLangs = 0;
     let translations = {};
-    let lang = localStorage.getItem('lang') || 'de';
-
-    let wpm = Number(localStorage.getItem('wpm')) || 20; // Morse speed
-    let pauseSeconds = Number(localStorage.getItem('pauseSeconds')) || 5;
-    let repeatCount = Number(localStorage.getItem('repeatCount')) || 3;
-    let noiseLevel = Number(localStorage.getItem('noiseLevel')) || 0;
-    let qsbLevel = Number(localStorage.getItem('qsbLevel')) || 0;
-    let autoMode = localStorage.getItem('autoMode') === 'false' ? false : true;
+    // Use defaults if nothing is stored yet
+    let wpm = Number(localStorage.getItem('wpm')) || DEFAULTS.wpm;
+    let pauseSeconds = Number(localStorage.getItem('pauseSeconds')) || DEFAULTS.pauseSeconds;
+    let repeatCount = Number(localStorage.getItem('repeatCount')) || DEFAULTS.repeatCount;
+    let noiseLevel = Number(localStorage.getItem('noiseLevel')) || DEFAULTS.noiseLevel;
+    let qsbLevel = Number(localStorage.getItem('qsbLevel')) || DEFAULTS.qsbLevel;
+    let autoMode = localStorage.getItem('autoMode') === 'false' ? false : DEFAULTS.autoMode;
+    let preCallMode = localStorage.getItem('preCallMode') || DEFAULTS.preCallMode;
+    let lang = localStorage.getItem('lang') || DEFAULTS.lang;
 
     let rufzeichenListe = [];
     let currentIndex = 0;
@@ -234,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function doPreCall(nextStep) {
-        const preCallMode = localStorage.getItem('preCallMode') || 'speech';
         if (preCallMode === 'speech') {
             // Speech output (language-dependent)
             if ('speechSynthesis' in window) {
