@@ -22,5 +22,14 @@
     "pre_call_announcement": "Ankündigung neues Rufzeichen",
     "pre_call_speech_v": "Ansage",
     "pre_call_morse_v": "Morsen 'V V V'",
-    "pre_call_speech": "Neues Rufzeichen wird vorbereitet"
+    "pre_call_speech": "Neues Rufzeichen wird vorbereitet",
+    "noise_type": "Rauschtyp",
+    "noise_type_white": "Weißes Rauschen",
+    "noise_type_pink": "Pinkes Rauschen",
+    "noise_type_brown": "Braunes Rauschen",
+    "noise_type_qrn": "QRN (Statische Störungen)",
+    "noise_type_qrm": "QRM (CW-Störer)",
+    "settings_group_general": "Allgemein",
+    "settings_group_noise": "Rauschen & Störungen",
+    "settings_group_announce": "Vorankündigung"    
 }

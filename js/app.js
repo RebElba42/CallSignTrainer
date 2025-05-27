@@ -44,9 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
         wpm: 20,
         pauseSeconds: 5,
         repeatCount: 3,
+        noiseType: 'white',
         noiseLevel: 28,
         qsbLevel: 62,
         autoMode: true,
+        qrmEnabled: true,
+        qrmLevel: 0,
         preCallMode: 'vvv',
         lang: 'de'
     };
@@ -59,7 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let wpm = Number(localStorage.getItem('wpm')) || DEFAULTS.wpm;
     let pauseSeconds = Number(localStorage.getItem('pauseSeconds')) || DEFAULTS.pauseSeconds;
     let repeatCount = Number(localStorage.getItem('repeatCount')) || DEFAULTS.repeatCount;
+    let noiseType = localStorage.getItem('noiseType') || DEFAULTS.noiseType;
     let noiseLevel = Number(localStorage.getItem('noiseLevel')) || DEFAULTS.noiseLevel;
+    let qrmEnabled = localStorage.getItem('qrmEnabled') === 'true';
+    let qrmLevel = Number(localStorage.getItem('qrmLevel')) || DEFAULTS.qrmLevel;
     let qsbLevel = Number(localStorage.getItem('qsbLevel')) || DEFAULTS.qsbLevel;
     let autoMode = localStorage.getItem('autoMode') === 'false' ? false : DEFAULTS.autoMode;
     let preCallMode = localStorage.getItem('preCallMode') || DEFAULTS.preCallMode;
@@ -76,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let audioUnlocked = false;
     let currentWhiteNoise = null;
     let currentNoiseGain = null;
+    let currentQrmOsc = null
 
     // Morse code table for letters and numbers
     const morseTable = {
@@ -171,15 +178,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Stop the noise (white noise)
     function stopNoise() {
-        console.log('stopNoise called', currentWhiteNoise, currentNoiseGain);
         if (currentWhiteNoise) {
-            try { currentWhiteNoise.stop(); } catch (e) { console.log('stop error', e); }
-            try { currentWhiteNoise.disconnect(); } catch (e) { console.log('disconnect error', e); }
+            try {
+                if (typeof currentWhiteNoise.stop === 'function') currentWhiteNoise.stop();
+                if (typeof currentWhiteNoise.disconnect === 'function') currentWhiteNoise.disconnect();
+            } catch (e) { }
             currentWhiteNoise = null;
         }
         if (currentNoiseGain) {
-            try { currentNoiseGain.disconnect(); } catch (e) { console.log('gain disconnect error', e); }
+            try { currentNoiseGain.disconnect(); } catch (e) { }
             currentNoiseGain = null;
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+        }
+
+        // Stop the QRM oscillator if it exists
+        if (currentQrmOsc) {
+            try {
+                currentQrmOsc.osc.stop();
+                currentQrmOsc.osc.disconnect();
+                currentQrmOsc.gain.disconnect();
+            } catch (e) { }
+            currentQrmOsc = null;
         }
     }
 
@@ -197,17 +219,96 @@ document.addEventListener('DOMContentLoaded', () => {
         currentNoiseGain = ctx.createGain();
         currentNoiseGain.gain.value = noiseLevel / 100;
 
-        let bufferSize = ctx.sampleRate * 2;
-        let noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        let output = noiseBuffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-            output[i] = Math.random() * 2 - 1;
+        // Generate noise according to selected type (white, pink, brown, QRN, QRM)
+        if (noiseLevel > 0) {
+            let noiseNode;
+            if (noiseType === 'white') {
+                // White noise
+                let bufferSize = ctx.sampleRate * 2;
+                let noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                let output = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+                currentWhiteNoise = ctx.createBufferSource();
+                currentWhiteNoise.buffer = noiseBuffer;
+                currentWhiteNoise.loop = true;
+                currentWhiteNoise.connect(currentNoiseGain).connect(ctx.destination);
+                currentWhiteNoise.start(time);
+            } else if (noiseType === 'pink') {
+                // Pink noise using ScriptProcessorNode
+                let bufferSize = 4096;
+                let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+                noiseNode = ctx.createScriptProcessor(bufferSize, 1, 1);
+                noiseNode.onaudioprocess = function (e) {
+                    let output = e.outputBuffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) {
+                        let white = Math.random() * 2 - 1;
+                        b0 = 0.99886 * b0 + white * 0.0555179;
+                        b1 = 0.99332 * b1 + white * 0.0750759;
+                        b2 = 0.96900 * b2 + white * 0.1538520;
+                        b3 = 0.86650 * b3 + white * 0.3104856;
+                        b4 = 0.55000 * b4 + white * 0.5329522;
+                        b5 = -0.7616 * b5 - white * 0.0168980;
+                        output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+                        output[i] *= 0.11;
+                        b6 = white * 0.115926;
+                    }
+                };
+                noiseNode.connect(currentNoiseGain).connect(ctx.destination);
+                currentWhiteNoise = noiseNode;
+            } else if (noiseType === 'brown') {
+                // Brown noise using ScriptProcessorNode
+                let bufferSize = 4096;
+                let lastOut = 0.0;
+                noiseNode = ctx.createScriptProcessor(bufferSize, 1, 1);
+                noiseNode.onaudioprocess = function (e) {
+                    let output = e.outputBuffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) {
+                        let white = Math.random() * 2 - 1;
+                        lastOut = (lastOut + (0.02 * white)) / 1.02;
+                        output[i] = lastOut * 3.5;
+                    }
+                };
+                noiseNode.connect(currentNoiseGain).connect(ctx.destination);
+                currentWhiteNoise = noiseNode;
+            } else if (noiseType === 'qrn') {
+                // QRN: Static/impulse noise (random short spikes)
+                let bufferSize = 4096;
+                noiseNode = ctx.createScriptProcessor(bufferSize, 1, 1);
+                noiseNode.onaudioprocess = function (e) {
+                    let output = e.outputBuffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) {
+                        // Mostly silence, sometimes a spike
+                        output[i] = (Math.random() < 0.995) ? 0 : (Math.random() * 2 - 1) * 0.8;
+                    }
+                };
+                noiseNode.connect(currentNoiseGain).connect(ctx.destination);
+                currentWhiteNoise = noiseNode;
+            } else if (noiseType === 'qrm') {
+                // QRM: CW interference (background Morse tone)
+                let osc = ctx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.value = 650 + Math.random() * 100; // Randomize a bit
+                osc.connect(currentNoiseGain).connect(ctx.destination);
+                osc.start(time);
+                currentWhiteNoise = osc;
+            }
         }
-        currentWhiteNoise = ctx.createBufferSource();
-        currentWhiteNoise.buffer = noiseBuffer;
-        currentWhiteNoise.loop = true;
-        currentWhiteNoise.connect(currentNoiseGain).connect(ctx.destination);
-        if (noiseLevel > 0) currentWhiteNoise.start(time);
+
+        // If QRM is enabled, add a background Morse tone
+        if (qrmLevel > 0) {
+            let qrmOsc = ctx.createOscillator();
+            qrmOsc.type = 'sine';
+            qrmOsc.frequency.value = 650 + Math.random() * 100;
+            let qrmGain = ctx.createGain();
+            qrmGain.gain.value = qrmLevel / 100; // 0 bis 0.73
+            qrmOsc.connect(qrmGain).connect(ctx.destination);
+            qrmOsc.start(time);
+            currentQrmOsc = { osc: qrmOsc, gain: qrmGain };
+        } else {
+            currentQrmOsc = null;
+        }
 
         // Play a single Morse tone
         function playTone(duration) {
@@ -265,16 +366,19 @@ document.addEventListener('DOMContentLoaded', () => {
             // Save current settings
             const oldNoise = noiseLevel;
             const oldQsb = qsbLevel;
+            const oldQrm = qrmLevel;
             noiseLevel = 0;
             qsbLevel = 0;
+            qrmLevel = 0;
             playMorse(vvv, wpm, () => {
                 // Restore settings
                 noiseLevel = oldNoise;
                 qsbLevel = oldQsb;
+                qrmLevel = oldQrm;
                 nextStep();
             });
         }
-    }    
+    }
 
     // Start the next quiz round
     function quizNext() {
@@ -328,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 repeatMorse();
             }, pauseSeconds * 1000);
         });
-        } 
+    }
 
     // Show the solution and speak it
     function showResult(call) {
@@ -378,9 +482,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 isPaused = !isPaused;
                 renderControls();
                 if (isPaused) stopNoise();
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
                 if (!isPaused && typeof pauseCallback === 'function') {
                     pauseCallback();
                     pauseCallback = null;
+                }
+                if (typeof activeTimeout !== 'undefined' && activeTimeout) {
+                    clearTimeout(activeTimeout);
+                    activeTimeout = null;
                 }
             }
         };
@@ -394,86 +503,152 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render the settings form
     function renderSettings() {
         settings.innerHTML = `
-        <form class="row g-2 justify-content-center mb-3 text-center">
-            <div class="col-12">
-                <h5 class="mb-3">${t('settings') || ''}</h5>
+        <div class="accordion" id="settingsAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingGeneral">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGeneral" aria-expanded="false" aria-controls="collapseGeneral">
+                ${t('settings_group_general')}
+            </button>
+            </h2>
+            <div id="collapseGeneral" class="accordion-collapse collapse" aria-labelledby="headingGeneral" data-bs-parent="#settingsAccordion">
+            <div class="accordion-body">
+                <!-- General settings here -->
+                <div class="mb-2">
+                    <label for="wpmInput" class="form-label mb-0 small w-100">${t('wpm')}</label>
+                    <input type="number" min="10" max="40" class="form-control form-control-sm text-center mx-auto" style="max-width:120px;" id="wpmInput" value="${wpm}">
+                </div>
+                <div class="mb-2">
+                    <label for="pauseInput" class="form-label mb-0 small w-100">${t('pause_seconds')}</label>
+                    <input type="number" min="1" max="120" class="form-control form-control-sm text-center mx-auto" style="max-width:120px;" id="pauseInput" value="${pauseSeconds}">
+                </div>
+                <div class="mb-2">
+                    <label for="repeatInput" class="form-label mb-0 small w-100">${t('repeat')}</label>
+                    <input type="number" min="1" max="10" class="form-control form-control-sm text-center mx-auto" style="max-width:120px;" id="repeatInput" value="${repeatCount}">
+                </div>
             </div>
-            <div class="col-12 col-sm-6 col-md-3 mb-2">
-                <label for="wpmInput" class="form-label mb-0 small w-100">${t('wpm')}</label>
-                <input type="number" min="10" max="40" class="form-control form-control-sm text-center mx-auto" style="max-width:120px;" id="wpmInput" value="${wpm}">
             </div>
-            <div class="col-12 col-sm-6 col-md-3 mb-2">
-                <label for="pauseInput" class="form-label mb-0 small w-100">${t('pause_seconds')}</label>
-                <input type="number" min="1" max="120" class="form-control form-control-sm text-center mx-auto" style="max-width:120px;" id="pauseInput" value="${pauseSeconds}">
-            </div>
-            <div class="col-12 col-sm-6 col-md-3 mb-2">
-                <label for="repeatInput" class="form-label mb-0 small w-100">${t('repeat')}</label>
-                <input type="number" min="1" max="10" class="form-control form-control-sm text-center mx-auto" style="max-width:120px;" id="repeatInput" value="${repeatCount}">
-            </div>
-            <div class="col-12 col-md-6 mb-2">
-                <label for="noiseInput" class="form-label mb-0 small w-100">${t('noise')}</label>
-                <div class="d-flex flex-column align-items-center">
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingNoise">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNoise" aria-expanded="false" aria-controls="collapseNoise">
+                ${t('settings_group_noise')}
+            </button>
+            </h2>
+            <div id="collapseNoise" class="accordion-collapse collapse" aria-labelledby="headingNoise" data-bs-parent="#settingsAccordion">
+            <div class="accordion-body">
+                <!-- Noise settings here -->
+                <div class="mb-2">
+                    <label for="noiseTypeInput" class="form-label mb-0 small w-100">${t('noise_type')}</label>
+                    <select id="noiseTypeInput" class="form-select form-select-sm mx-auto" style="max-width:200px;">
+                        <option value="white" ${noiseType === 'white' ? 'selected' : ''}>${t('noise_type_white')}</option>
+                        <option value="pink" ${noiseType === 'pink' ? 'selected' : ''}>${t('noise_type_pink')}</option>
+                        <option value="brown" ${noiseType === 'brown' ? 'selected' : ''}>${t('noise_type_brown')}</option>
+                        <option value="qrn" ${noiseType === 'qrn' ? 'selected' : ''}>${t('noise_type_qrn')}</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label for="noiseInput" class="form-label mb-0 small w-100">${t('noise')}</label>
                     <input type="range" min="0" max="100" step="1" class="form-range" id="noiseInput" value="${noiseLevel}" style="max-width:200px;">
-                    <div>
-                        <span id="noiseValue">${noiseLevel}</span>% 
-                        <span class="small ms-2" title="${t('noise_help')}">?</span>
-                    </div>
+                    <span id="noiseValue">${noiseLevel}</span>%
                 </div>
-            </div>
-            <div class="col-12 col-md-6 mb-2">
-                <label for="qsbInput" class="form-label mb-0 small w-100">${t('qsb')}</label>
-                <div class="d-flex flex-column align-items-center">
+                <div class="mb-2">
+                    <label for="qrmInput" class="form-label mb-0 small w-100">${t('noise_type_qrm')}</label>
+                    <input type="range" min="0" max="73" step="1" class="form-range" id="qrmInput" value="${qrmLevel}" style="max-width:200px;">
+                    <span id="qrmValue">${qrmLevel}</span>%
+                </div>
+                <div class="mb-2">
+                    <label for="qsbInput" class="form-label mb-0 small w-100">${t('qsb')}</label>
                     <input type="range" min="0" max="100" step="1" class="form-range" id="qsbInput" value="${qsbLevel}" style="max-width:200px;">
-                    <div>
-                        <span id="qsbValue">${qsbLevel}</span>% 
-                        <span class="small ms-2" title="${t('qsb_help')}">?</span>
+                    <span id="qsbValue">${qsbLevel}</span>%
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingAnnounce">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAnnounce" aria-expanded="false" aria-controls="collapseAnnounce">
+                ${t('settings_group_announce')}
+            </button>
+            </h2>
+            <div id="collapseAnnounce" class="accordion-collapse collapse" aria-labelledby="headingAnnounce" data-bs-parent="#settingsAccordion">
+            <div class="accordion-body">
+                <!-- Pre-call settings here -->
+                <div>
+                    <label class="form-label mb-0 small w-100">${t('pre_call_announcement')}</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="preCallMode" id="preCallSpeech" value="speech" ${localStorage.getItem('preCallMode') !== 'vvv' ? 'checked' : ''}>
+                        <label class="form-check-label" for="preCallSpeech">${t('pre_call_speech_v')}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="preCallMode" id="preCallVVV" value="vvv" ${localStorage.getItem('preCallMode') === 'vvv' ? 'checked' : ''}>
+                        <label class="form-check-label" for="preCallVVV">${t('pre_call_morse_v')}</label>
                     </div>
                 </div>
             </div>
-            <div class="col-12 mb-2">
-                <label class="form-label mb-0 small w-100">${t('pre_call_announcement')}</label>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="preCallMode" id="preCallSpeech" value="speech" ${localStorage.getItem('preCallMode') !== 'vvv' ? 'checked' : ''}>
-                    <label class="form-check-label" for="preCallSpeech">${t('pre_call_speech_v')}</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="preCallMode" id="preCallVVV" value="vvv" ${localStorage.getItem('preCallMode') === 'vvv' ? 'checked' : ''}>
-                    <label class="form-check-label" for="preCallVVV">${t('pre_call_morse_v')}</label>
-                </div>
-            </div>            
-        </form>
-    `;
+            </div>
+        </div>
+        </div>
+        `;
+
+        document.getElementById('qrmInput').addEventListener('input', (e) => {
+            qrmLevel = Number(e.target.value);
+            localStorage.setItem('qrmLevel', qrmLevel);
+            document.getElementById('qrmValue').innerText = qrmLevel;
+        });
+
+        // Event listener for noise type selection
+        document.getElementById('noiseTypeInput').addEventListener('change', (e) => {
+            noiseType = e.target.value;
+            localStorage.setItem('noiseType', noiseType);
+        });
+
         // Event listener for pre-call mode
         document.querySelectorAll('input[name="preCallMode"]').forEach(el => {
             el.addEventListener('change', (e) => {
                 localStorage.setItem('preCallMode', e.target.value);
             });
-        });    
+        });
 
         document.getElementById('wpmInput').addEventListener('change', (e) => {
             wpm = Math.max(10, Math.min(40, Number(e.target.value)));
             localStorage.setItem('wpm', wpm);
             e.target.value = wpm;
         });
+
         document.getElementById('pauseInput').addEventListener('change', (e) => {
             pauseSeconds = Math.max(1, Math.min(120, Number(e.target.value)));
             localStorage.setItem('pauseSeconds', pauseSeconds);
             e.target.value = pauseSeconds;
         });
+
         document.getElementById('repeatInput').addEventListener('change', (e) => {
             repeatCount = Math.max(1, Math.min(10, Number(e.target.value)));
             localStorage.setItem('repeatCount', repeatCount);
             e.target.value = repeatCount;
         });
+
         document.getElementById('noiseInput').addEventListener('input', (e) => {
             noiseLevel = Number(e.target.value);
             localStorage.setItem('noiseLevel', noiseLevel);
             document.getElementById('noiseValue').innerText = noiseLevel;
         });
+
         document.getElementById('qsbInput').addEventListener('input', (e) => {
             qsbLevel = Number(e.target.value);
             localStorage.setItem('qsbLevel', qsbLevel);
             document.getElementById('qsbValue').innerText = qsbLevel;
+        });
+
+        // Accordion state: restore from localStorage
+        ['General', 'Noise', 'Announce'].forEach(group => {
+            const key = `settingsAccordion_${group}`;
+            const collapse = document.getElementById(`collapse${group}`);
+            if (collapse && localStorage.getItem(key) === 'show') {
+                new bootstrap.Collapse(collapse, { show: true, toggle: true });
+            }
+            // Listener für Statusänderung
+            collapse.addEventListener('show.bs.collapse', () => localStorage.setItem(key, 'show'));
+            collapse.addEventListener('hide.bs.collapse', () => localStorage.setItem(key, 'hide'));
         });
     }
 
