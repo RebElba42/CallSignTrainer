@@ -9,6 +9,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-dark.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <!-- Open Graph Meta Tags for Link Preview -->
+    <meta property="og:title" content="Amateurfunkrufzeichen Morse Quiz by DB4REB" />
+    <meta property="og:description" content="Trainiere und übe Amateurfunkrufzeichen als Morsecode (CW) – direkt im Browser, mobil und am Desktop!" />
+    <meta property="og:image" content="https://rebelba42.4lima.de/mcode/images/screenshot_main.jpg" />
+    <meta property="og:url" content="https://rebelba42.4lima.de/mcode/" />
+    <meta property="og:type" content="website" />
 </head>
 <body class="bg-dark text-light">
     <!-- Main container for the app -->

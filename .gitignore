@@ -15,9 +15,14 @@ Test*.html
 /vendor/
 /composer.lock
 
+#python
+/bin
+/lib
+pyvenv.cfg
+
 # Umgebungsdateien
 .env
-.env.local
+.env.local 
 
 # IDEs und Editoren
 /.idea/
