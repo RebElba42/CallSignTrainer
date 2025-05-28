@@ -176,6 +176,33 @@ document.addEventListener('DOMContentLoaded', () => {
         return text.toUpperCase().split('').map(ch => morseTable[ch] || '').join(' ');
     }
 
+    // Pick a preferred voice for speech synthesis
+    function pickPreferredVoice(utter) {
+        const voices = window.speechSynthesis.getVoices();
+        const voiceKey = 'voiceURI_' + lang;
+        const selectedVoiceURI = localStorage.getItem(voiceKey) || '';
+
+        let found = null;
+        if (selectedVoiceURI) {
+            found = voices.find(v => v.voiceURI === selectedVoiceURI);
+        }
+        if (!found) {
+            // Bevorzugte Stimme nach Sprache
+            let preferredVoiceName = '';
+            if (utter.lang === 'de-DE') preferredVoiceName = 'Anna';
+            if (utter.lang === 'en-US') preferredVoiceName = 'Kathrin';
+            if (preferredVoiceName) {
+                found = voices.find(v => v.lang === utter.lang && v.name.includes(preferredVoiceName));
+            }
+        }
+        if (!found) {
+            found = voices.find(v => v.lang === utter.lang && v.gender === 'female');
+            if (!found) found = voices.find(v => v.lang === utter.lang && /google|apple/i.test(v.name));
+            if (!found) found = voices.find(v => v.lang === utter.lang);
+        }
+        if (found) utter.voice = found;
+    }
+
     // Initialize and unlock AudioContext (for mobile)
     function unlockAudioContext() {
         if (!audioCtx || audioCtx.state === 'closed') {
@@ -194,10 +221,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
-
+    // Unlock SpeechSynthesis (for mobile)
+    function unlockSpeechSynthesis() {
+        if ('speechSynthesis' in window) {
+            try {
+                const utter = new SpeechSynthesisUtterance('');
+                window.speechSynthesis.speak(utter);
+            } catch (e) { }
+        }
+    }
     // Stop the noise (white noise)
-    function stopNoise() {
+    function stopNoise(cancelSpeech = true) {
         if (currentWhiteNoise) {
             try {
                 if (typeof currentWhiteNoise.stop === 'function') currentWhiteNoise.stop();
@@ -210,11 +244,11 @@ document.addEventListener('DOMContentLoaded', () => {
             currentNoiseGain = null;
         }
 
-        if ('speechSynthesis' in window) {
+        // Nur abbrechen, wenn gewünscht!
+        if (cancelSpeech && 'speechSynthesis' in window) {
             window.speechSynthesis.cancel();
         }
 
-        // Stop the QRM oscillator if it exists
         if (currentQrmOsc) {
             try {
                 currentQrmOsc.osc.stop();
@@ -371,25 +405,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Speech output (language-dependent)
             if ('speechSynthesis' in window) {
                 const langObj = availableLanguages.find(l => l.code === lang);
-                const utter = new SpeechSynthesisUtterance(
-                    t('pre_call_speech')
-                );
+                const utter = new SpeechSynthesisUtterance(t('pre_call_speech'));
                 utter.lang = langObj ? langObj.voice : 'de-DE';
                 utter.onend = nextStep;
-
-                // Stimme setzen (wie in showResult)
-                const selectedVoiceURI = localStorage.getItem('voiceURI') || '';
-                const voices = window.speechSynthesis.getVoices();
-                if (selectedVoiceURI) {
-                    const found = voices.find(v => v.voiceURI === selectedVoiceURI);
-                    if (found) utter.voice = found;
-                } else {
-                    let preferred = voices.find(v => v.lang === utter.lang && v.gender === 'female');
-                    if (!preferred) preferred = voices.find(v => v.lang === utter.lang && /google|apple/i.test(v.name));
-                    if (!preferred) preferred = voices.find(v => v.lang === utter.lang);
-                    if (preferred) utter.voice = preferred;
-                }
-
+                pickPreferredVoice(utter); // <--- HIER
                 window.speechSynthesis.speak(utter);
             } else {
                 nextStep();
@@ -470,24 +489,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Show the solution and speak it
     function showResult(call) {
-        stopNoise();
+        stopNoise(false);
         quizContainer.innerHTML = `<div class="alert alert-success text-center py-3">${t('solution')}<br><span class="display-5 fw-bold">${call}</span></div>`;
         if ('speechSynthesis' in window) {
             const langObj = availableLanguages.find(l => l.code === lang);
             const utter = new SpeechSynthesisUtterance(`${t('solution')} ${call.split('').join(' ')}`);
             utter.lang = langObj ? langObj.voice : 'de-DE';
-            // Stimme setzen:
-            const selectedVoiceURI = localStorage.getItem('voiceURI') || '';
-            const voices = window.speechSynthesis.getVoices();
-            if (selectedVoiceURI) {
-                const found = voices.find(v => v.voiceURI === selectedVoiceURI);
-                if (found) utter.voice = found;
-            } else {
-                let preferred = voices.find(v => v.lang === utter.lang && v.gender === 'female');
-                if (!preferred) preferred = voices.find(v => v.lang === utter.lang && /google|apple/i.test(v.name));
-                if (!preferred) preferred = voices.find(v => v.lang === utter.lang);
-                if (preferred) utter.voice = preferred;
-            }
+            pickPreferredVoice(utter); // <--- HIER
             window.speechSynthesis.speak(utter);
         }
         if (autoMode) {
@@ -520,6 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isStarted) {
                 requestWakeLock();
                 unlockAudioContext();
+                unlockSpeechSynthesis();
                 isStarted = true;
                 isPaused = false;
                 renderControls();
@@ -620,11 +629,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div>
                     <label class="form-label mb-0 small w-100">${t('pre_call_announcement')}</label>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="preCallMode" id="preCallSpeech" value="speech" ${localStorage.getItem('preCallMode') !== 'vvv' ? 'checked' : ''}>
+                        <input class="form-check-input" type="radio" name="preCallMode" id="preCallSpeech" value="speech" ${preCallMode === 'speech' ? 'checked' : ''}>
                         <label class="form-check-label" for="preCallSpeech">${t('pre_call_speech_v')}</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="preCallMode" id="preCallVVV" value="vvv" ${localStorage.getItem('preCallMode') === 'vvv' ? 'checked' : ''}>
+                        <input class="form-check-input" type="radio" name="preCallMode" id="preCallVVV" value="vvv" ${preCallMode === 'vvv' ? 'checked' : ''}>
                         <label class="form-check-label" for="preCallVVV">${t('pre_call_morse_v')}</label>
                     </div>
                 </div>
@@ -785,32 +794,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Populate voice selection
         const voiceSelect = document.getElementById('voiceSelect');
-        const savedVoiceURI = localStorage.getItem('voiceURI') || '';
+        const voiceKey = 'voiceURI_' + lang;
+        let savedVoiceURI = localStorage.getItem(voiceKey) || '';
 
+        // Populate voices in the dropdown
         function populateVoices() {
             if (!('speechSynthesis' in window)) return;
             const voices = window.speechSynthesis.getVoices();
-            // Filter nach aktueller Sprache
             const langObj = availableLanguages.find(l => l.code === lang);
             const langCode = langObj ? langObj.voice : 'de-DE';
-            // Nur Stimmen für die aktuelle Sprache
             const filtered = voices.filter(v => v.lang === langCode);
-            // Sortiere: bevorzugt weiblich, dann Google/Apple, dann Rest
-            filtered.sort((a, b) => {
-                // Weiblich bevorzugen
-                if (a.gender === 'female' && b.gender !== 'female') return -1;
-                if (a.gender !== 'female' && b.gender === 'female') return 1;
-                // Google/Apple bevorzugen
-                if (/google|apple/i.test(a.name) && !/google|apple/i.test(b.name)) return -1;
-                if (!/google|apple/i.test(a.name) && /google|apple/i.test(b.name)) return 1;
-                return a.name.localeCompare(b.name);
-            });
+
+            let preferredVoiceName = '';
+            if (langCode === 'de-DE') preferredVoiceName = 'Anna';
+            if (langCode === 'en-US') preferredVoiceName = 'Kathrin';
+
+            let savedVoiceURI = localStorage.getItem(voiceKey) || '';
+            let defaultVoiceURI = '';
+            if (!savedVoiceURI && defaultVoiceURI) {
+                localStorage.setItem(voiceKey, defaultVoiceURI);
+                voiceSelect.value = defaultVoiceURI;
+                voiceSelect.dispatchEvent(new Event('change'));
+            }
+
             // Dropdown befüllen
             voiceSelect.innerHTML = `<option value="">${t('voice_default')}</option>`;
             filtered.forEach(voice => {
-                voiceSelect.innerHTML += `<option value="${voice.voiceURI}"${voice.voiceURI === savedVoiceURI ? ' selected' : ''}>${voice.name} (${voice.lang})</option>`;
+                const selected = (savedVoiceURI
+                    ? voice.voiceURI === savedVoiceURI
+                    : voice.voiceURI === defaultVoiceURI)
+                    ? ' selected' : '';
+                voiceSelect.innerHTML += `<option value="${voice.voiceURI}"${selected}>${voice.name} (${voice.lang})</option>`;
             });
+
+            // Wenn keine Auswahl gespeichert, aber Default gefunden, setze ihn im localStorage und im Dropdown
+            if (!savedVoiceURI && defaultVoiceURI) {
+                localStorage.setItem('voiceURI', defaultVoiceURI);
+                voiceSelect.value = defaultVoiceURI;
+                // Das ist wichtig, damit der Wert im Speicher und im Dropdown synchron bleibt:
+                voiceSelect.dispatchEvent(new Event('change'));
+            }
         }
+
+        // Check if SpeechSynthesis is supported
         if ('speechSynthesis' in window) {
             populateVoices();
             // Stimmen können asynchron nachgeladen werden
@@ -819,7 +845,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Auswahl speichern
         voiceSelect.addEventListener('change', (e) => {
-            localStorage.setItem('voiceURI', e.target.value);
+            localStorage.setItem(voiceKey, e.target.value);
         });
 
         // Test button for voice
@@ -828,18 +854,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const langObj = availableLanguages.find(l => l.code === lang);
                 const utter = new SpeechSynthesisUtterance(t('new_round'));
                 utter.lang = langObj ? langObj.voice : 'de-DE';
-                const selectedVoiceURI = localStorage.getItem('voiceURI') || '';
-                const voices = window.speechSynthesis.getVoices();
-                if (selectedVoiceURI) {
-                    const found = voices.find(v => v.voiceURI === selectedVoiceURI);
-                    if (found) utter.voice = found;
-                } else {
-                    let preferred = voices.find(v => v.lang === utter.lang && v.gender === 'female');
-                    if (!preferred) preferred = voices.find(v => v.lang === utter.lang && /google|apple/i.test(v.name));
-                    if (!preferred) preferred = voices.find(v => v.lang === utter.lang);
-                    if (preferred) utter.voice = preferred;
-                }
-                window.speechSynthesis.cancel(); // Stop any running speech
+                pickPreferredVoice(utter); // <--- HIER
+                window.speechSynthesis.cancel();
                 window.speechSynthesis.speak(utter);
             }
         });

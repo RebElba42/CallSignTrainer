@@ -42,7 +42,7 @@
             </div>
             <div class="small mt-2 mt-md-0">
                 <span>Source code on <a href="https://github.com/RebElba42/CallSignTrainer" class="link-light" target="_blank">GitHub</a></span>
-                &middot; <span>Made with <span style="color:#e25555;">&#9829;</span> for CW fans</span>
+                &middot; <span>Made for myself & CW fans <span style="color:#00bcd4;">&#128225;</span> </span>
             </div>
         </div>
     </footer>
