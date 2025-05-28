@@ -513,17 +513,17 @@ document.addEventListener('DOMContentLoaded', () => {
             <div id="collapseGeneral" class="accordion-collapse collapse" aria-labelledby="headingGeneral" data-bs-parent="#settingsAccordion">
             <div class="accordion-body">
                 <!-- General settings here -->
-                <div class="mb-2">
+                <div class="mb-2 d-flex flex-column">
                     <label for="wpmInput" class="form-label mb-0 small w-100">${t('wpm')}</label>
-                    <input type="number" min="10" max="40" class="form-control form-control-sm text-center mx-auto" style="max-width:120px;" id="wpmInput" value="${wpm}">
+                    <input type="number" min="10" max="40" class="form-control form-control-sm" style="max-width:120px;" id="wpmInput" value="${wpm}">
                 </div>
-                <div class="mb-2">
+                <div class="mb-2 d-flex flex-column">
                     <label for="pauseInput" class="form-label mb-0 small w-100">${t('pause_seconds')}</label>
-                    <input type="number" min="1" max="120" class="form-control form-control-sm text-center mx-auto" style="max-width:120px;" id="pauseInput" value="${pauseSeconds}">
+                    <input type="number" min="1" max="120" class="form-control form-control-sm" style="max-width:120px;" id="pauseInput" value="${pauseSeconds}">
                 </div>
-                <div class="mb-2">
+                <div class="mb-2 d-flex flex-column">
                     <label for="repeatInput" class="form-label mb-0 small w-100">${t('repeat')}</label>
-                    <input type="number" min="1" max="10" class="form-control form-control-sm text-center mx-auto" style="max-width:120px;" id="repeatInput" value="${repeatCount}">
+                    <input type="number" min="1" max="10" class="form-control form-control-sm" style="max-width:120px;" id="repeatInput" value="${repeatCount}">
                 </div>
             </div>
             </div>
@@ -536,10 +536,9 @@ document.addEventListener('DOMContentLoaded', () => {
             </h2>
             <div id="collapseNoise" class="accordion-collapse collapse" aria-labelledby="headingNoise" data-bs-parent="#settingsAccordion">
             <div class="accordion-body">
-                <!-- Noise settings here -->
-                <div class="mb-2">
+                <div class="mb-2 d-flex flex-column">
                     <label for="noiseTypeInput" class="form-label mb-0 small w-100">${t('noise_type')}</label>
-                    <select id="noiseTypeInput" class="form-select form-select-sm mx-auto" style="max-width:200px;">
+                    <select id="noiseTypeInput" class="form-select form-select-sm" style="max-width:200px;">
                         <option value="white" ${noiseType === 'white' ? 'selected' : ''}>${t('noise_type_white')}</option>
                         <option value="pink" ${noiseType === 'pink' ? 'selected' : ''}>${t('noise_type_pink')}</option>
                         <option value="brown" ${noiseType === 'brown' ? 'selected' : ''}>${t('noise_type_brown')}</option>
