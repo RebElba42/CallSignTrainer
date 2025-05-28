@@ -376,6 +376,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
                 utter.lang = langObj ? langObj.voice : 'de-DE';
                 utter.onend = nextStep;
+
+                // Stimme setzen (wie in showResult)
+                const selectedVoiceURI = localStorage.getItem('voiceURI') || '';
+                const voices = window.speechSynthesis.getVoices();
+                if (selectedVoiceURI) {
+                    const found = voices.find(v => v.voiceURI === selectedVoiceURI);
+                    if (found) utter.voice = found;
+                } else {
+                    let preferred = voices.find(v => v.lang === utter.lang && v.gender === 'female');
+                    if (!preferred) preferred = voices.find(v => v.lang === utter.lang && /google|apple/i.test(v.name));
+                    if (!preferred) preferred = voices.find(v => v.lang === utter.lang);
+                    if (preferred) utter.voice = preferred;
+                }
+
                 window.speechSynthesis.speak(utter);
             } else {
                 nextStep();
@@ -462,6 +476,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const langObj = availableLanguages.find(l => l.code === lang);
             const utter = new SpeechSynthesisUtterance(`${t('solution')} ${call.split('').join(' ')}`);
             utter.lang = langObj ? langObj.voice : 'de-DE';
+            // Stimme setzen:
+            const selectedVoiceURI = localStorage.getItem('voiceURI') || '';
+            const voices = window.speechSynthesis.getVoices();
+            if (selectedVoiceURI) {
+                const found = voices.find(v => v.voiceURI === selectedVoiceURI);
+                if (found) utter.voice = found;
+            } else {
+                let preferred = voices.find(v => v.lang === utter.lang && v.gender === 'female');
+                if (!preferred) preferred = voices.find(v => v.lang === utter.lang && /google|apple/i.test(v.name));
+                if (!preferred) preferred = voices.find(v => v.lang === utter.lang);
+                if (preferred) utter.voice = preferred;
+            }
             window.speechSynthesis.speak(utter);
         }
         if (autoMode) {
@@ -617,7 +643,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         <option value="superhero">${t('theme_superhero')}</option>
                         <option value="yeti">${t('theme_yeti')}</option>
                     </select>
-                </div>          
+                </div> 
+                <div class="mb-2 d-flex flex-column">
+                    <label for="voiceSelect" class="form-label mb-0 small w-100">${t('voice')}</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <select id="voiceSelect" class="form-select form-select-sm" style="max-width:300px;">
+                            <option value="">${t('voice_default')}</option>
+                        </select>
+                        <button id="voiceTestBtn" type="button" class="btn btn-outline-secondary btn-sm">${t('voice_test')}</button>
+                    </div>
+                    <small class="text-muted">${t('voice_help')}</small>
+                </div>
             </div>
             </div>
         </div>
@@ -710,6 +746,67 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             themeLink.href = themeHref;
         }
+
+        // Populate voice selection
+        const voiceSelect = document.getElementById('voiceSelect');
+        const savedVoiceURI = localStorage.getItem('voiceURI') || '';
+
+        function populateVoices() {
+            if (!('speechSynthesis' in window)) return;
+            const voices = window.speechSynthesis.getVoices();
+            // Filter nach aktueller Sprache
+            const langObj = availableLanguages.find(l => l.code === lang);
+            const langCode = langObj ? langObj.voice : 'de-DE';
+            // Nur Stimmen für die aktuelle Sprache
+            const filtered = voices.filter(v => v.lang === langCode);
+            // Sortiere: bevorzugt weiblich, dann Google/Apple, dann Rest
+            filtered.sort((a, b) => {
+                // Weiblich bevorzugen
+                if (a.gender === 'female' && b.gender !== 'female') return -1;
+                if (a.gender !== 'female' && b.gender === 'female') return 1;
+                // Google/Apple bevorzugen
+                if (/google|apple/i.test(a.name) && !/google|apple/i.test(b.name)) return -1;
+                if (!/google|apple/i.test(a.name) && /google|apple/i.test(b.name)) return 1;
+                return a.name.localeCompare(b.name);
+            });
+            // Dropdown befüllen
+            voiceSelect.innerHTML = `<option value="">${t('voice_default')}</option>`;
+            filtered.forEach(voice => {
+                voiceSelect.innerHTML += `<option value="${voice.voiceURI}"${voice.voiceURI === savedVoiceURI ? ' selected' : ''}>${voice.name} (${voice.lang})</option>`;
+            });
+        }
+        if ('speechSynthesis' in window) {
+            populateVoices();
+            // Stimmen können asynchron nachgeladen werden
+            window.speechSynthesis.onvoiceschanged = populateVoices;
+        }
+
+        // Auswahl speichern
+        voiceSelect.addEventListener('change', (e) => {
+            localStorage.setItem('voiceURI', e.target.value);
+        });
+
+        // Test button for voice
+        document.getElementById('voiceTestBtn').addEventListener('click', () => {
+            if ('speechSynthesis' in window) {
+                const langObj = availableLanguages.find(l => l.code === lang);
+                const utter = new SpeechSynthesisUtterance(t('new_round'));
+                utter.lang = langObj ? langObj.voice : 'de-DE';
+                const selectedVoiceURI = localStorage.getItem('voiceURI') || '';
+                const voices = window.speechSynthesis.getVoices();
+                if (selectedVoiceURI) {
+                    const found = voices.find(v => v.voiceURI === selectedVoiceURI);
+                    if (found) utter.voice = found;
+                } else {
+                    let preferred = voices.find(v => v.lang === utter.lang && v.gender === 'female');
+                    if (!preferred) preferred = voices.find(v => v.lang === utter.lang && /google|apple/i.test(v.name));
+                    if (!preferred) preferred = voices.find(v => v.lang === utter.lang);
+                    if (preferred) utter.voice = preferred;
+                }
+                window.speechSynthesis.cancel(); // Stop any running speech
+                window.speechSynthesis.speak(utter);
+            }
+        });
 
     }
 

@@ -44,5 +44,10 @@
     "theme_slate": "Slate (Dunkel)",
     "theme_spacelab": "Spacelab",
     "theme_superhero": "Superhero (Dunkel)",
-    "theme_yeti": "Yeti"    
+    "theme_yeti": "Yeti",
+    "voice": "Stimme",
+    "voice_default": "Standard (empfohlen)",
+    "voice_select": "Stimme auswählen",
+    "voice_help": "Wähle eine Stimme für die Sprachausgabe",
+    "voice_test": "Stimme testen"
 }

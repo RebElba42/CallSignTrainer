@@ -44,5 +44,10 @@
     "theme_slate": "Slate (dark)",
     "theme_spacelab": "Spacelab",
     "theme_superhero": "Superhero (dark)",
-    "theme_yeti": "Yeti"        
+    "theme_yeti": "Yeti",
+    "voice": "Voice",
+    "voice_default": "Default (recommended)",
+    "voice_select": "Select voice",
+    "voice_help": "Choose a voice for speech output",
+    "voice_test": "Test voice"
 }

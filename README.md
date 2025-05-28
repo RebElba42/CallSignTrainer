@@ -8,6 +8,7 @@ CallSignTrainer is a web application for practicing and training amateur radio c
 - Adjustable speed (WPM), pause duration, repetitions, noise level, and QSB simulation
 - Speech output for hints and solutions (Text-to-Speech)
 - Two languages: German and English
+- Selectable color themes (including Darkmode and various Bootswatch themes)
 - Supports desktop and mobile browsers (including Firefox, Safari, Chrome)
 - Automatic and manual mode
 
@@ -29,6 +30,8 @@ CallSignTrainer is a web application for practicing and training amateur radio c
 2. Open in your browser (e.g., via a local web server like MAMP/XAMPP or upload directly to a web server).
 3. The application is ready to use.
 
+---
+
 ## Screenshots
 
 ### Main Screen
@@ -39,6 +42,20 @@ CallSignTrainer is a web application for practicing and training amateur radio c
 
 ### End of Round
 ![End of Round](images/screenshot_end_round.jpg)
+
+### Noise Settings
+![End of Round](images/screenshot_noise.jpg)
+
+### Change Theme
+![End of Round](images/screenshot_change_theme.jpg)
+
+### Announcement and Behavior
+![End of Round](images/screenshot_announce.jpg)
+
+### Change Voice
+![End of Round](images/screenshot_change_voice.jpg)
+
+---
 
 ## Third Party / Credits
 
@@ -58,4 +75,4 @@ MIT License
 
 ---
 
-Enjoy training!
+Enjoy!
