@@ -52,5 +52,8 @@
     "voice_test": "Test voice",
     "wpm_hint": "Please enter a value between 5 and 50.",
     "pause_hint": "Please enter a value between 1 and 10.",
-    "repeat_hint": "Please enter a value between 1 and 10."    
+    "repeat_hint": "Please enter a value between 1 and 10.",
+    "farnsworth_wpm": "Farnsworth-WPM",
+    "farnsworth_hint": "Slower char spacing (Farnsworth). Must be ≤ WPM." 
+
 }

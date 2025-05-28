@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let autoMode = localStorage.getItem('autoMode') === 'false' ? false : DEFAULTS.autoMode;
     let preCallMode = localStorage.getItem('preCallMode') || DEFAULTS.preCallMode;
     let lang = localStorage.getItem('lang') || DEFAULTS.lang;
+    let farnsworthWpm = Number(localStorage.getItem('farnsworthWpm')) || wpm;
 
     let rufzeichenListe = [];
     let currentIndex = 0;
@@ -152,6 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Return translation for a given key
     function t(key) {
+        if (!translations[lang]) console.log('No translations for', lang);
+        if (!translations[lang][key]) console.log('Missing key', key, 'in', lang, translations[lang]);
+
         return translations[lang] && translations[lang][key] ? translations[lang][key] : key;
     }
 
@@ -262,6 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Play a Morse code string as sound (with noise)
     function playMorse(morse, wpm, onComplete) {
         const unit = 1200 / wpm;
+        const farnsworthUnit = 1200 / farnsworthWpm;
         if (!audioCtx || audioCtx.state === 'closed') {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
@@ -382,7 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
             time += duration / 1000;
         }
 
-        // Play Morse code sequence
+        // Play Morse code sequence with farnsworth timing
         for (let symbol of morse) {
             if (symbol === '.') {
                 playTone(unit);
@@ -391,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 playTone(3 * unit);
                 time += unit / 1000;
             } else if (symbol === ' ') {
-                time += 2 * unit / 1000;
+                time += (farnsworthUnit * 3) / 1000;
             }
         }
         setTimeout(() => {
@@ -420,20 +425,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const oldNoise = noiseLevel;
             const oldQsb = qsbLevel;
             const oldQrm = qrmLevel;
+            const oldFarnsworth = farnsworthWpm;
             noiseLevel = 0;
             qsbLevel = 0;
-            qrmLevel = 0;
+            qrmLevel = 0;            
+            farnsworthWpm = wpm;
+
             playMorse(vvv, wpm, () => {
                 // Restore settings
                 noiseLevel = oldNoise;
                 qsbLevel = oldQsb;
                 qrmLevel = oldQrm;
+                farnsworthWpm = oldFarnsworth;
                 nextStep();
             });
         }
     }
 
-    // Start the next quiz round
+    // Start next quiz round
     function quizNext() {
         result.innerHTML = '';
         if (currentIndex >= rufzeichenListe.length) {
@@ -495,7 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const langObj = availableLanguages.find(l => l.code === lang);
             const utter = new SpeechSynthesisUtterance(`${t('solution')} ${call.split('').join(' ')}`);
             utter.lang = langObj ? langObj.voice : 'de-DE';
-            pickPreferredVoice(utter); R
+            pickPreferredVoice(utter);
             window.speechSynthesis.speak(utter);
         }
         if (autoMode) {
@@ -580,6 +589,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <label for="repeatInput" class="form-label mb-0 small w-100">${t('repeat')}</label>
                     <input type="number" min="1" max="10" required class="form-control form-control-sm" style="max-width:120px;" id="repeatInput" value="${repeatCount}">
                 </div>
+                <div class="mb-2 d-flex flex-column">
+                    <label for="farnsworthWpmInput" class="form-label mb-0 small w-100">Farnsworth-WPM</label>
+                    <input type="range" min="5" max="${wpm}" step="1" class="form-range" id="farnsworthWpmInput" value="${farnsworthWpm}" style="max-width:120px;">
+                    <span id="farnsworthWpmValue">${farnsworthWpm} WPM</span> 
+                    <small class="text-muted">${t('farnsworth_hint')}</small>
+                </div>            
             </div>
             </div>
         </div>
@@ -695,6 +710,14 @@ document.addEventListener('DOMContentLoaded', () => {
             wpm = Math.max(5, Math.min(50, Number(e.target.value)));
             localStorage.setItem('wpm', wpm);
             e.target.value = wpm;
+            document.getElementById('farnsworthWpmInput').max = wpm;
+            if (farnsworthWpm > wpm) {
+                farnsworthWpm = wpm;
+                localStorage.setItem('farnsworthWpm', farnsworthWpm);
+                document.getElementById('farnsworthWpmInput').value = wpm;
+                document.getElementById('farnsworthWpmValue').innerText = wpm;
+            }
+
         });
 
         document.getElementById('pauseInput').addEventListener('change', (e) => {
@@ -832,6 +855,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 voiceSelect.value = defaultVoiceURI;
                 voiceSelect.dispatchEvent(new Event('change'));
             }
+
+            // Add Farnsworth WPM input
+            const farnsworthInput = document.getElementById('farnsworthWpmInput');
+            const farnsworthValue = document.getElementById('farnsworthWpmValue');
+            farnsworthInput.addEventListener('input', (e) => {
+                let val = Math.max(5, Math.min(wpm, Number(e.target.value)));
+                farnsworthWpm = val;
+                localStorage.setItem('farnsworthWpm', farnsworthWpm);
+                farnsworthInput.value = val;
+                farnsworthValue.innerText = val;
+            });
         }
 
         // Check if SpeechSynthesis is supported
