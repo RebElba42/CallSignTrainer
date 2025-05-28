@@ -40,6 +40,18 @@ CallSignTrainer is a web application for practicing and training amateur radio c
 ### End of Round
 ![End of Round](images/screenshot_end_round.jpg)
 
+## Third Party / Credits
+
+This project uses [Bootswatch](https://bootswatch.com/) themes, which are released under the MIT License:
+
+> Bootswatch (c) Thomas Park  
+> https://github.com/thomaspark/bootswatch  
+> Licensed under the MIT License
+
+Theme CSS files in `css/themes/` are based on Bootswatch.
+
+---
+
 ## License
 
 MIT License

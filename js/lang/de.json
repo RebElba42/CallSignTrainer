@@ -31,5 +31,18 @@
     "noise_type_qrm": "QRM (CW-Störer)",
     "settings_group_general": "Allgemein",
     "settings_group_noise": "Rauschen & Störungen",
-    "settings_group_announce": "Vorankündigung"    
+    "settings_group_announce": "Ansicht und Verhalten",
+    "theme": "Theme",
+    "theme_dark": "Darkmode (Standard)",
+    "theme_cerulean": "Cerulean (Hellblau)",
+    "theme_cosmo": "Cosmo",
+    "theme_flatly": "Flatly (Hell)",
+    "theme_lumen": "Lumen",
+    "theme_minty": "Minty",
+    "theme_morph": "Morph",
+    "theme_sandstone": "Sandstone",
+    "theme_slate": "Slate (Dunkel)",
+    "theme_spacelab": "Spacelab",
+    "theme_superhero": "Superhero (Dunkel)",
+    "theme_yeti": "Yeti"    
 }

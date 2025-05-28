@@ -26,6 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Set Theme CSS dynamically based on saved theme
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        setTheme(savedTheme);
+    });
+
     // Get important DOM elements
     const quizContainer = document.getElementById('quiz-container');
     const controls = document.getElementById('controls');
@@ -39,6 +45,20 @@ document.addEventListener('DOMContentLoaded', () => {
         { code: 'de', name: 'Deutsch', flag: '🇩🇪', file: 'js/lang/de.json', voice: 'de-DE' },
         { code: 'en', name: 'English', flag: '🇬🇧', file: 'js/lang/en.json', voice: 'en-US' }
     ];
+
+    const themeMap = {
+        dark: "css/themes/bootstrap-dark.min.css",
+        cerulean: "css/themes/bootstrap-cerulean.min.css",
+        cosmo: "css/themes/bootstrap-cosmo.min.css",
+        flatly: "css/themes/bootstrap-flatly.min.css",
+        lumen: "css/themes/bootstrap-lumen.min.css",
+        minty: "css/themes/bootstrap-minty.min.css",
+        sandstone: "css/themes/bootstrap-sandstone.min.css",
+        slate: "css/themes/bootstrap-slate.min.css",
+        spacelab: "css/themes/bootstrap-spacelab.min.css",
+        superhero: "css/themes/bootstrap-superhero.min.css",
+        yeti: "css/themes/bootstrap-yeti.min.css"
+    };
 
     const DEFAULTS = {
         wpm: 20,
@@ -571,7 +591,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </h2>
             <div id="collapseAnnounce" class="accordion-collapse collapse" aria-labelledby="headingAnnounce" data-bs-parent="#settingsAccordion">
             <div class="accordion-body">
-                <!-- Pre-call settings here -->
                 <div>
                     <label class="form-label mb-0 small w-100">${t('pre_call_announcement')}</label>
                     <div class="form-check form-check-inline">
@@ -583,6 +602,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         <label class="form-check-label" for="preCallVVV">${t('pre_call_morse_v')}</label>
                     </div>
                 </div>
+                <div class="mb-2 d-flex flex-column">
+                    <label for="themeSelect" class="form-label mb-0 small w-100">${t('theme')}</label>
+                    <select id="themeSelect" class="form-select form-select-sm" style="max-width:200px;">
+                        <option value="dark">${t('theme_dark')}</option>
+                        <option value="cerulean">${t('theme_cerulean')}</option>
+                        <option value="cosmo">${t('theme_cosmo')}</option>
+                        <option value="flatly">${t('theme_flatly')}</option>
+                        <option value="lumen">${t('theme_lumen')}</option>
+                        <option value="minty">${t('theme_minty')}</option>
+                        <option value="sandstone">${t('theme_sandstone')}</option>
+                        <option value="slate">${t('theme_slate')}</option>
+                        <option value="spacelab">${t('theme_spacelab')}</option>
+                        <option value="superhero">${t('theme_superhero')}</option>
+                        <option value="yeti">${t('theme_yeti')}</option>
+                    </select>
+                </div>          
             </div>
             </div>
         </div>
@@ -649,6 +684,33 @@ document.addEventListener('DOMContentLoaded', () => {
             collapse.addEventListener('show.bs.collapse', () => localStorage.setItem(key, 'show'));
             collapse.addEventListener('hide.bs.collapse', () => localStorage.setItem(key, 'hide'));
         });
+
+        const themeSelect = document.getElementById('themeSelect');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        themeSelect.value = savedTheme;
+
+        // Load Theme CSS dynamically
+        setTheme(savedTheme);
+
+        themeSelect.addEventListener('change', (e) => {
+            const theme = e.target.value;
+            setTheme(theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        function setTheme(theme) {
+            let themeHref = themeMap[theme] || themeMap['dark'];
+            let themeLink = document.getElementById('theme-css');
+            if (!themeLink) {
+                // Fallback: Theme-Link dynamisch einfügen, falls nicht vorhanden
+                themeLink = document.createElement('link');
+                themeLink.rel = 'stylesheet';
+                themeLink.id = 'theme-css';
+                document.head.appendChild(themeLink);
+            }
+            themeLink.href = themeHref;
+        }
+
     }
 
     // Update the entire UI

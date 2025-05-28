@@ -31,5 +31,18 @@
     "noise_type_qrm": "QRM (CW interference)",
     "settings_group_general": "General",
     "settings_group_noise": "Noise & Interference",
-    "settings_group_announce": "Pre-call Announcement"    
+    "settings_group_announce": "Announcement and Behavior",
+    "theme": "Theme",
+    "theme_dark": "Darkmode (default)",
+    "theme_cerulean": "Cerulean (light blue)",
+    "theme_cosmo": "Cosmo",
+    "theme_flatly": "Flatly (light)",
+    "theme_lumen": "Lumen",
+    "theme_minty": "Minty",
+    "theme_morph": "Morph",
+    "theme_sandstone": "Sandstone",
+    "theme_slate": "Slate (dark)",
+    "theme_spacelab": "Spacelab",
+    "theme_superhero": "Superhero (dark)",
+    "theme_yeti": "Yeti"        
 }

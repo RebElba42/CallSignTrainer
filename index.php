@@ -6,7 +6,7 @@
     <title>Amateurfunkrufzeichen Morse Quiz (c) 2025 DB4REB </title>
     <!-- Bootstrap 5 Dark Mode CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-dark.min.css" rel="stylesheet">
+    <link id="theme-css" href="css/themes/bootstrap-dark.min.css" rel="stylesheet">    
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <!-- Open Graph Meta Tags for Link Preview -->
