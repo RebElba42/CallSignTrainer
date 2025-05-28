@@ -49,5 +49,8 @@
     "voice_default": "Default (recommended)",
     "voice_select": "Select voice",
     "voice_help": "Choose a voice for speech output",
-    "voice_test": "Test voice"
+    "voice_test": "Test voice",
+    "wpm_hint": "Please enter a value between 5 and 50.",
+    "pause_hint": "Please enter a value between 1 and 10.",
+    "repeat_hint": "Please enter a value between 1 and 10."    
 }

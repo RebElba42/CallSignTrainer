@@ -49,5 +49,8 @@
     "voice_default": "Standard (empfohlen)",
     "voice_select": "Stimme auswählen",
     "voice_help": "Wähle eine Stimme für die Sprachausgabe",
-    "voice_test": "Stimme testen"
+    "voice_test": "Stimme testen",
+    "wpm_hint": "Bitte einen Wert zwischen 5 und 50 eingeben.",
+    "pause_hint": "Bitte einen Wert zwischen 1 und 10 eingeben.",
+    "repeat_hint": "Bitte einen Wert zwischen 1 und 10 eingeben."    
 }

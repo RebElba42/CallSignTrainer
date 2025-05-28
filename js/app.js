@@ -561,15 +561,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <!-- General settings here -->
                 <div class="mb-2 d-flex flex-column">
                     <label for="wpmInput" class="form-label mb-0 small w-100">${t('wpm')}</label>
-                    <input type="number" min="10" max="40" class="form-control form-control-sm" style="max-width:120px;" id="wpmInput" value="${wpm}">
+                    <input type="number" min="5" max="50" required class="form-control form-control-sm" style="max-width:120px;" id="wpmInput" value="${wpm}">
                 </div>
                 <div class="mb-2 d-flex flex-column">
                     <label for="pauseInput" class="form-label mb-0 small w-100">${t('pause_seconds')}</label>
-                    <input type="number" min="1" max="120" class="form-control form-control-sm" style="max-width:120px;" id="pauseInput" value="${pauseSeconds}">
+                    <input type="number" min="1" max="10" required class="form-control form-control-sm" style="max-width:120px;" id="pauseInput" value="${pauseSeconds}">
                 </div>
                 <div class="mb-2 d-flex flex-column">
                     <label for="repeatInput" class="form-label mb-0 small w-100">${t('repeat')}</label>
-                    <input type="number" min="1" max="10" class="form-control form-control-sm" style="max-width:120px;" id="repeatInput" value="${repeatCount}">
+                    <input type="number" min="1" max="10" required class="form-control form-control-sm" style="max-width:120px;" id="repeatInput" value="${repeatCount}">
                 </div>
             </div>
             </div>
@@ -675,18 +675,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // Event listener for pre-call mode
         document.querySelectorAll('input[name="preCallMode"]').forEach(el => {
             el.addEventListener('change', (e) => {
-                localStorage.setItem('preCallMode', e.target.value);
+                preCallMode = e.target.value; // Variable sofort aktualisieren!
+                localStorage.setItem('preCallMode', preCallMode);
             });
         });
 
         document.getElementById('wpmInput').addEventListener('change', (e) => {
-            wpm = Math.max(10, Math.min(40, Number(e.target.value)));
+            wpm = Math.max(5, Math.min(50, Number(e.target.value)));
             localStorage.setItem('wpm', wpm);
             e.target.value = wpm;
         });
 
         document.getElementById('pauseInput').addEventListener('change', (e) => {
-            pauseSeconds = Math.max(1, Math.min(120, Number(e.target.value)));
+            pauseSeconds = Math.max(1, Math.min(10, Number(e.target.value)));
             localStorage.setItem('pauseSeconds', pauseSeconds);
             e.target.value = pauseSeconds;
         });
@@ -695,6 +696,41 @@ document.addEventListener('DOMContentLoaded', () => {
             repeatCount = Math.max(1, Math.min(10, Number(e.target.value)));
             localStorage.setItem('repeatCount', repeatCount);
             e.target.value = repeatCount;
+        });
+
+        // ...nach den bisherigen Event-Listenern für wpmInput, pauseInput, repeatInput...
+
+        // Custom Validity für WPM
+        const wpmInput = document.getElementById('wpmInput');
+        wpmInput.addEventListener('input', (e) => {
+            if (e.target.value < 5 || e.target.value > 50) {
+                e.target.setCustomValidity(t('wpm_hint'));
+                e.target.reportValidity();
+            } else {
+                e.target.setCustomValidity('');
+            }
+        });
+
+        // Custom Validity für Pause
+        const pauseInput = document.getElementById('pauseInput');
+        pauseInput.addEventListener('input', (e) => {
+            if (e.target.value < 1 || e.target.value > 10) {
+                e.target.setCustomValidity(t('pause_hint'));
+                e.target.reportValidity();
+            } else {
+                e.target.setCustomValidity('');
+            }
+        });
+
+        // Custom Validity für Wiederholungen
+        const repeatInput = document.getElementById('repeatInput');
+        repeatInput.addEventListener('input', (e) => {
+            if (e.target.value < 1 || e.target.value > 10) {
+                e.target.setCustomValidity(t('repeat_hint'));
+                e.target.reportValidity();
+            } else {
+                e.target.setCustomValidity('');
+            }
         });
 
         document.getElementById('noiseInput').addEventListener('input', (e) => {
