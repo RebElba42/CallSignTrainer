@@ -495,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const langObj = availableLanguages.find(l => l.code === lang);
             const utter = new SpeechSynthesisUtterance(`${t('solution')} ${call.split('').join(' ')}`);
             utter.lang = langObj ? langObj.voice : 'de-DE';
-            pickPreferredVoice(utter); // <--- HIER
+            pickPreferredVoice(utter); R
             window.speechSynthesis.speak(utter);
         }
         if (autoMode) {
@@ -669,6 +669,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         `;
 
+        // Event listener for QRM level input
         document.getElementById('qrmInput').addEventListener('input', (e) => {
             qrmLevel = Number(e.target.value);
             localStorage.setItem('qrmLevel', qrmLevel);
@@ -689,6 +690,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        //Event listener for wpm, pause, repeat inputs
         document.getElementById('wpmInput').addEventListener('change', (e) => {
             wpm = Math.max(5, Math.min(50, Number(e.target.value)));
             localStorage.setItem('wpm', wpm);
@@ -706,8 +708,6 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('repeatCount', repeatCount);
             e.target.value = repeatCount;
         });
-
-        // ...nach den bisherigen Event-Listenern für wpmInput, pauseInput, repeatInput...
 
         // Custom Validity für WPM
         const wpmInput = document.getElementById('wpmInput');
@@ -761,7 +761,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (collapse && localStorage.getItem(key) === 'show') {
                 new bootstrap.Collapse(collapse, { show: true, toggle: true });
             }
-            // Listener für Statusänderung
+            // Listener Status 
             collapse.addEventListener('show.bs.collapse', () => localStorage.setItem(key, 'show'));
             collapse.addEventListener('hide.bs.collapse', () => localStorage.setItem(key, 'hide'));
         });
@@ -827,11 +827,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 voiceSelect.innerHTML += `<option value="${voice.voiceURI}"${selected}>${voice.name} (${voice.lang})</option>`;
             });
 
-            // Wenn keine Auswahl gespeichert, aber Default gefunden, setze ihn im localStorage und im Dropdown
             if (!savedVoiceURI && defaultVoiceURI) {
                 localStorage.setItem('voiceURI', defaultVoiceURI);
                 voiceSelect.value = defaultVoiceURI;
-                // Das ist wichtig, damit der Wert im Speicher und im Dropdown synchron bleibt:
                 voiceSelect.dispatchEvent(new Event('change'));
             }
         }
@@ -839,11 +837,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check if SpeechSynthesis is supported
         if ('speechSynthesis' in window) {
             populateVoices();
-            // Stimmen können asynchron nachgeladen werden
             window.speechSynthesis.onvoiceschanged = populateVoices;
         }
 
-        // Auswahl speichern
         voiceSelect.addEventListener('change', (e) => {
             localStorage.setItem(voiceKey, e.target.value);
         });
