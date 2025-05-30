@@ -428,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const oldFarnsworth = farnsworthWpm;
             noiseLevel = 0;
             qsbLevel = 0;
-            qrmLevel = 0;            
+            qrmLevel = 0;
             farnsworthWpm = wpm;
 
             playMorse(vvv, wpm, () => {
@@ -561,6 +561,10 @@ document.addEventListener('DOMContentLoaded', () => {
             autoMode = e.target.checked;
             localStorage.setItem('autoMode', autoMode);
             renderControls();
+            // If auto mode is enabled, start the next quiz immediately
+            if (autoMode && isStarted && !isPaused) {
+                quizNext();
+            }
         };
     }
 
