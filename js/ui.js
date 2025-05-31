@@ -51,7 +51,6 @@ export function initUI() {
         languageSelect.innerHTML = html;
         document.getElementById('langSelect').onchange = (e) => {
             setLanguage(e.target.value);
-            saveSettings();
             updateAll();
         };
     }
