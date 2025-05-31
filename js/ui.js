@@ -20,6 +20,14 @@ const themeMap = {
     yeti: "css/themes/bootstrap-yeti.min.css"
 };
 
+// check if the browser is iOS Safarix
+export function isIOSSafari() {
+    const ua = navigator.userAgent;
+    const isIOS = /iP(ad|hone|od)/i.test(ua);
+    const isSafari = !!ua.match(/Safari/i) && !ua.match(/CriOS|FxiOS|EdgiOS/);
+    return isIOS && isSafari;
+}
+
 // Apply the selected theme by updating the CSS link
 function applyTheme(theme) {
     let themeHref = themeMap[theme] || themeMap['dark'];
@@ -79,6 +87,13 @@ export function initUI() {
             let state = getQuizState();
             if (!state.isStarted) {
                 unlockAudioContext();
+                if (isIOSSafari()) {
+                    const dummy = new window.SpeechSynthesisUtterance(' ');
+                    dummy.volume = 0;
+                    dummy.rate = 10;
+                    window.speechSynthesis.speak(dummy);
+                }
+
                 state.isStarted = true;
                 state.isPaused = false;
                 setQuizState(state);

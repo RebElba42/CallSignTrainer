@@ -21,7 +21,7 @@
     <div class="container py-4">
         <!-- Header with title and language selection -->
         <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
-            <h1 class="mb-0" id="headline">Amateurfunkrufzeichen Morse Quiz</h1>
+            <h2 class="mb-2" id="headline">Amateurfunkrufzeichen Morse Quiz</h2>
             <div id="language-select"></div>
         </div>
         <!-- Quiz content area -->

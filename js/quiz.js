@@ -10,6 +10,7 @@ let isPaused = false;
 let isStarted = false;
 let pauseCallback = null;
 
+
 export function setCallsignList(list) {
     rufzeichenListe = list;
     shuffleArray(rufzeichenListe);
@@ -131,11 +132,18 @@ export function showResult(call, quizContainer, result, updateUI) {
     stopNoise(false);
     quizContainer.innerHTML = `<div class="alert alert-success text-center py-3">${t('solution')}<br><span class="display-5 fw-bold">${call}</span></div>`;
     if ('speechSynthesis' in window) {
-        const langObj = availableLanguages.find(l => l.code === lang);
-        const utter = new SpeechSynthesisUtterance(`${t('solution')} ${call.split('').join(' ')}`);
-        utter.lang = langObj ? langObj.voice : 'de-DE';
-        pickPreferredVoice(utter);
-        window.speechSynthesis.speak(utter);
+        // Workaround für iOS/Safari: Erst einen stummen Utterance abspielen
+        const dummy = new SpeechSynthesisUtterance(' ');
+        dummy.volume = 0;
+        dummy.rate = 10;
+        dummy.onend = () => {
+            const langObj = availableLanguages.find(l => l.code === lang);
+            const utter = new SpeechSynthesisUtterance(`${t('solution')} ${call.split('').join(' ')}`);
+            utter.lang = langObj ? langObj.voice : 'de-DE';
+            pickPreferredVoice(utter);
+            window.speechSynthesis.speak(utter);
+        };
+        window.speechSynthesis.speak(dummy);
     }
 
     if (settings.autoMode) {
