@@ -129,6 +129,21 @@ export function initUI() {
                         <input type="number" min="1" max="10" required class="form-control form-control-sm" style="max-width:120px;" id="repeatInput" value="${settings.repeatCount}">
                     </div>
                     <div class="mb-2 d-flex flex-column">
+                        <label for="delayBeforePreCallInput" class="form-label mb-0 small w-100">${t('delay_before_pre_call')}</label>
+                        <input type="number" min="0" max="10" class="form-control form-control-sm" style="max-width:120px;" id="delayBeforePreCallInput" value="${settings.delayBeforePreCall}">
+                        <small class="text-muted">${t('delay_before_pre_call_hint')}</small>
+                    </div>
+                    <div class="mb-2 d-flex flex-column">
+                        <label for="delayBeforeMorseInput" class="form-label mb-0 small w-100">${t('delay_before_morse')}</label>
+                        <input type="number" min="0" max="10" class="form-control form-control-sm" style="max-width:120px;" id="delayBeforeMorseInput" value="${settings.delayBeforeMorse}">
+                        <small class="text-muted">${t('delay_before_morse_hint')}</small>
+                    </div>
+                    <div class="mb-2 d-flex flex-column">
+                        <label for="delayBeforeSolutionInput" class="form-label mb-0 small w-100">${t('delay_before_solution')}</label>
+                        <input type="number" min="0" max="10" class="form-control form-control-sm" style="max-width:120px;" id="delayBeforeSolutionInput" value="${settings.delayBeforeSolution}">
+                        <small class="text-muted">${t('delay_before_solution_hint')}</small>
+                    </div>                    
+                    <div class="mb-2 d-flex flex-column">
                         <label for="farnsworthWpmInput" class="form-label mb-0 small w-100">Farnsworth-WPM</label>
                         <input type="range" min="5" max="${settings.wpm}" step="1" class="form-range" id="farnsworthWpmInput" value="${settings.farnsworthWpm}" style="max-width:120px;">
                         <span id="farnsworthWpmValue">${settings.farnsworthWpm} WPM</span> 
@@ -251,7 +266,6 @@ export function initUI() {
             e.target.value = settings.farnsworthWpm;
             document.getElementById('farnsworthWpmValue').innerText = settings.farnsworthWpm + " WPM";
         });
-
         // Noise settings
         document.getElementById('noiseTypeInput').addEventListener('change', (e) => {
             settings.noiseType = e.target.value;
@@ -271,6 +285,21 @@ export function initUI() {
             settings.qsbLevel = Number(e.target.value);
             saveSettings();
             document.getElementById('qsbValue').innerText = settings.qsbLevel;
+        });
+        document.getElementById('delayBeforePreCallInput').addEventListener('change', (e) => {
+            settings.delayBeforePreCall = Math.max(0, Math.min(10, Number(e.target.value)));
+            saveSettings();
+            e.target.value = settings.delayBeforePreCall;
+        });
+        document.getElementById('delayBeforeMorseInput').addEventListener('change', (e) => {
+            settings.delayBeforeMorse = Math.max(0, Math.min(10, Number(e.target.value)));
+            saveSettings();
+            e.target.value = settings.delayBeforeMorse;
+        });
+        document.getElementById('delayBeforeSolutionInput').addEventListener('change', (e) => {
+            settings.delayBeforeSolution = Math.max(0, Math.min(10, Number(e.target.value)));
+            saveSettings();
+            e.target.value = settings.delayBeforeSolution;
         });
 
         // Pre-call mode

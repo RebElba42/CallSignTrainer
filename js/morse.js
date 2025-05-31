@@ -167,21 +167,36 @@ export function playMorse(morse, wpm, farnsworthWpm, noiseType, noiseLevel, qsbL
         currentQrmOsc = null;
     }
 
+    const isVVV = morse.replace(/\s/g, '').toLowerCase() === "...-...-...-";
+    const delay = isVVV ? 0 : (settings.delayBeforeMorse || 0);
+
+    setTimeout(() => {
+        playCallsignMorse(ctx, morse, unit, farnsworthUnit, qsbLevel, onComplete);
+    }, delay * 1000);
+}
+
+function playCallsignMorse(ctx, morse, unit, farnsworthUnit, qsbLevel, onComplete) {
+    let time = ctx.currentTime;
+
     // Play a single Morse tone
     function playTone(duration) {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
+
         osc.type = 'sine';
         osc.frequency.value = 700;
+
         let minQsb = 1 - (qsbLevel / 100);
         let qsb = qsbLevel > 0 ? (minQsb + Math.random() * (1 - minQsb)) : 1.0;
         gain.gain.value = qsb;
+
         osc.connect(gain).connect(ctx.destination);
         osc.start(time);
         osc.stop(time + duration / 1000);
         time += duration / 1000;
     }
 
+    // Play Morse code sequence with farnsworth timing
     for (let symbol of morse) {
         if (symbol === '.') {
             playTone(unit);

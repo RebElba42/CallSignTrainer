@@ -54,6 +54,12 @@
     "pause_hint": "Please enter a value between 1 and 10.",
     "repeat_hint": "Please enter a value between 1 and 10.",
     "farnsworth_wpm": "Farnsworth-WPM",
-    "farnsworth_hint": "Slower char spacing (Farnsworth). Must be ≤ WPM." 
+    "farnsworth_hint": "Slower char spacing (Farnsworth). Must be ≤ WPM.",
+    "delay_before_pre_call": "Delay after announcement / VVV (sec.)",
+    "delay_before_pre_call_hint": "...before the callsign is sent.",
+    "delay_before_morse": "Delay after noise (sec.)",
+    "delay_before_morse_hint": "...before the callsign is sent.",
+    "delay_before_solution": "Delay after last attempt (sec.)",
+    "delay_before_solution_hint": "...before the solution is shown."
 
 }

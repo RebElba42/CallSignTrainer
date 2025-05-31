@@ -54,6 +54,12 @@
     "pause_hint": "Bitte einen Wert zwischen 1 und 10 eingeben.",
     "repeat_hint": "Bitte einen Wert zwischen 1 und 10 eingeben.",
     "farnsworth_wpm": "Farnsworth-WPM",
-    "farnsworth_hint": "Langsame Buchstabenabstände (Farnsworth). ≤ WPM." 
+    "farnsworth_hint": "Langsame Buchstabenabstände (Farnsworth). ≤ WPM.",
+    "delay_before_pre_call": "Wartezeit nach Ansage / VVV (Sek.)",
+    "delay_before_pre_call_hint": "...bis das Rufzeichen gemorst wird.",
+    "delay_before_morse": "Wartezeit nach Rauschen (Sek.)",
+    "delay_before_morse_hint": "...bevor das Rufzeichen gemorst wird.",
+    "delay_before_solution": "Wartezeit nach letztem Versuch (Sek.)",
+    "delay_before_solution_hint": "...bevor die Lösung angezeigt wird."
 
 }

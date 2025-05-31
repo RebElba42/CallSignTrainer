@@ -35,7 +35,9 @@ export function doPreCall(nextStep) {
             nextStep();
         }
     } else {
+        // Morse V V V
         const vvv = textToMorse('V V V');
+        // Save current settings to restore later
         const oldNoise = settings.noiseLevel;
         const oldQsb = settings.qsbLevel;
         const oldQrm = settings.qrmLevel;
@@ -45,13 +47,23 @@ export function doPreCall(nextStep) {
         settings.qrmLevel = 0;
         settings.farnsworthWpm = settings.wpm;
 
-        playMorse(vvv, settings.wpm, settings.farnsworthWpm, settings.noiseType, settings.noiseLevel, settings.qsbLevel, settings.qrmLevel, () => {
-            settings.noiseLevel = oldNoise;
-            settings.qsbLevel = oldQsb;
-            settings.qrmLevel = oldQrm;
-            settings.farnsworthWpm = oldFarnsworth;
-            nextStep();
-        });
+        playMorse(
+            vvv,
+            settings.wpm,
+            settings.farnsworthWpm,
+            settings.noiseType,
+            settings.noiseLevel,
+            settings.qsbLevel,
+            settings.qrmLevel,
+            () => {
+                // Reset settings to old values
+                settings.noiseLevel = oldNoise;
+                settings.qsbLevel = oldQsb;
+                settings.qrmLevel = oldQrm;
+                settings.farnsworthWpm = oldFarnsworth;
+                nextStep();
+            }
+        );
     }
 }
 
@@ -99,10 +111,14 @@ export function quizNext(quizContainer, result, updateUI) {
                             }, settings.pauseSeconds * 1000);
                         }
                     });
+                } else {
+                    setTimeout(() => {
+                        showResult(call, quizContainer, result, updateUI);
+                    }, settings.delayBeforeSolution * 1000);
                 }
             }
             repeatMorse();
-        }, settings.pauseSeconds * 1000);
+        }, settings.delayBeforePreCall * 1000);
     });
 }
 
