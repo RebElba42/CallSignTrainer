@@ -1,8 +1,9 @@
 import { t, setLanguage, lang, availableLanguages } from './i18n.js';
-import { settings, saveSettings } from './settings.js';
 import { quizNext, getQuizState, setQuizState, setCallsignList } from './quiz.js';
 import { unlockAudioContext } from './morse.js';
 import { pickPreferredVoice } from './voices.js';
+import { settings, saveSettings, DEFAULTS } from './settings.js';
+import { requestWakeLock, releaseWakeLock } from './wakeLock.js';
 
 // Theme mapping for Bootstrap themes
 const themeMap = {
@@ -84,10 +85,16 @@ export function initUI() {
                 setQuizState(state);
                 renderControls();
                 quizNext(quizContainer, result, updateAll);
+                if (settings.autoMode) requestWakeLock();
             } else {
                 state.isPaused = !state.isPaused;
                 setQuizState(state);
                 renderControls();
+                if (state.isPaused) {
+                    releaseWakeLock();
+                } else {
+                    requestWakeLock();
+                }
                 if (!state.isPaused && typeof state.pauseCallback === 'function') {
                     state.pauseCallback();
                     state.pauseCallback = null;
@@ -97,11 +104,16 @@ export function initUI() {
         document.getElementById('autoSwitch').onchange = (e) => {
             settings.autoMode = e.target.checked;
             saveSettings();
-            renderControls();
             let state = getQuizState();
-            if (settings.autoMode && state.isStarted && !state.isPaused) {
-                quizNext(quizContainer, result, updateAll);
+            if (settings.autoMode) {
+                requestWakeLock();
+                if (state.isStarted && !state.isPaused) {
+                    quizNext(quizContainer, result, updateAll);
+                }
+            } else {
+                releaseWakeLock();
             }
+            renderControls();
         };
     }
 
@@ -232,12 +244,26 @@ export function initUI() {
                         </div>
                         <small class="text-muted">${t('voice_help')}</small>
                     </div>
+                    <div class="mb-2 d-flex flex-column">
+                        <button id="resetSettingsBtn" type="button" class="btn btn-outline-danger btn-sm mt-2">
+                            ${t('reset_settings')}
+                        </button>
+                    </div>                    
                 </div>
             </div>
         </div>
     </div>
     `;
 
+        // Reset settings button
+        document.getElementById('resetSettingsBtn').addEventListener('click', () => {
+            if (confirm(t('reset_settings_confirm'))) {
+                Object.assign(settings, DEFAULTS);
+                Object.keys(DEFAULTS).forEach(key => localStorage.removeItem(key));
+                saveSettings();
+                location.reload();
+            }
+        });
         // General settings
         document.getElementById('wpmInput').addEventListener('change', (e) => {
             settings.wpm = Math.max(5, Math.min(50, Number(e.target.value)));

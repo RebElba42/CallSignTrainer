@@ -2,6 +2,7 @@ import { settings } from './settings.js';
 import { textToMorse, playMorse, stopNoise } from './morse.js';
 import { t, lang, availableLanguages } from './i18n.js';
 import { pickPreferredVoice } from './voices.js';
+import { requestWakeLock, releaseWakeLock } from './wakeLock.js';
 
 let rufzeichenListe = [];
 let currentIndex = 0;
@@ -75,6 +76,10 @@ export function quizNext(quizContainer, result, updateUI) {
     }
     const call = rufzeichenListe[currentIndex];
 
+    if (!settings.autoMode) {
+        requestWakeLock(); // Wake Lock auch im manuellen Modus aktivieren
+    }
+
     quizContainer.innerHTML = `
     <div class="alert alert-warning text-center py-3" style="font-size:1.3em;">
         ⭐ ${t('new_round')} ⭐<br>
@@ -132,11 +137,14 @@ export function showResult(call, quizContainer, result, updateUI) {
         pickPreferredVoice(utter);
         window.speechSynthesis.speak(utter);
     }
+
     if (settings.autoMode) {
         setTimeout(() => {
             currentIndex++;
             quizNext(quizContainer, result, updateUI);
         }, settings.pauseSeconds * 1000);
+    } else {
+        releaseWakeLock();
     }
 }
 

@@ -60,6 +60,8 @@
     "delay_before_morse": "Wartezeit nach Rauschen (Sek.)",
     "delay_before_morse_hint": "...bevor das Rufzeichen gemorst wird.",
     "delay_before_solution": "Wartezeit nach letztem Versuch (Sek.)",
-    "delay_before_solution_hint": "...bevor die Lösung angezeigt wird."
+    "delay_before_solution_hint": "...bevor die Lösung angezeigt wird.",
+    "reset_settings": "Einstellungen zurücksetzen",
+    "reset_settings_confirm": "Willst du wirklich alle Einstellungen auf Werkseinstellungen zurücksetzen?"
 
 }
