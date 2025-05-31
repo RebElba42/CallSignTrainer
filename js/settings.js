@@ -11,7 +11,7 @@ export const DEFAULTS = {
     preCallMode: 'vvv',
     lang: 'de',
     farnsworthWpm: 20,
-    theme: 'slate',
+    theme: 'dark',
     delayBeforePreCall: 1,
     delayBeforeMorse: 2,
     delayBeforeSolution: 4
