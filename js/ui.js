@@ -195,7 +195,7 @@ export function initUI() {
                         <small class="text-muted">${t('farnsworth_hint')}</small>
                     </div>
                     <div class="mb-2 d-flex flex-column">
-                        <button id="testMorseBtn" type="button" class="btn btn-success btn-sm mt-2">
+                        <button id="testMorseBtn" type="button" class="btn btn-outline-success btn-sm mt-2">
                             ${t('test_morse')}
                         </button>
                     </div>                    
