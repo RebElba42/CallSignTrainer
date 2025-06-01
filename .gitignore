@@ -33,3 +33,5 @@ pyvenv.cfg
 # Betriebssystem spezifisch
 ehthumbs.db
 Icon?
+gen_callsigns_new.py
+rufzeichen_international.json
