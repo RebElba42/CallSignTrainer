@@ -1,6 +1,7 @@
 {
     "headline": "Amateurfunkrufzeichen Morse Quiz",
     "start": "Start",
+    "stop": "Stopp",
     "pause": "Pausieren",
     "resume": "Fortsetzen",
     "next": "Nächstes Rufzeichen",

@@ -66,15 +66,17 @@ export function initUI() {
     function renderControls() {
         const { isPaused, isStarted } = getQuizState();
         controls.innerHTML = `
-            <div class="d-flex flex-wrap justify-content-center gap-2 mb-2">
-                <button id="nextBtn" class="btn btn-primary"${settings.autoMode || !isStarted || isPaused ? ' disabled' : ''}>${t('next')}</button>
-                <button id="pauseBtn" class="btn btn-secondary">${!isStarted ? t('start') : (isPaused ? t('resume') : t('pause'))}</button>
-                <div class="form-check form-switch ms-2">
-                    <input class="form-check-input" type="checkbox" id="autoSwitch" ${settings.autoMode ? 'checked' : ''}>
-                    <label class="form-check-label" for="autoSwitch">${t('auto')}</label>
-                </div>
+        <div class="d-flex flex-wrap justify-content-center gap-2 mb-2">
+            <button id="nextBtn" class="btn btn-primary"${settings.autoMode || !isStarted || isPaused ? ' disabled' : ''}>${t('next')}</button>
+            <button id="pauseBtn" class="btn btn-secondary">
+                ${!isStarted ? t('start') : (t('stop') || 'Stopp')}
+            </button>
+            <div class="form-check form-switch ms-2">
+                <input class="form-check-input" type="checkbox" id="autoSwitch" ${settings.autoMode ? 'checked' : ''}>
+                <label class="form-check-label" for="autoSwitch">${t('auto')}</label>
             </div>
-        `;
+        </div>
+    `;
         document.getElementById('nextBtn').onclick = () => {
             if (!settings.autoMode && isStarted && !isPaused) {
                 let state = getQuizState();
@@ -93,7 +95,6 @@ export function initUI() {
                     dummy.rate = 10;
                     window.speechSynthesis.speak(dummy);
                 }
-
                 state.isStarted = true;
                 state.isPaused = false;
                 setQuizState(state);
@@ -101,18 +102,8 @@ export function initUI() {
                 quizNext(quizContainer, result, updateAll);
                 if (settings.autoMode) requestWakeLock();
             } else {
-                state.isPaused = !state.isPaused;
-                setQuizState(state);
-                renderControls();
-                if (state.isPaused) {
-                    releaseWakeLock();
-                } else {
-                    requestWakeLock();
-                }
-                if (!state.isPaused && typeof state.pauseCallback === 'function') {
-                    state.pauseCallback();
-                    state.pauseCallback = null;
-                }
+                // Stopp: Seite neu laden
+                location.reload();
             }
         };
         document.getElementById('autoSwitch').onchange = (e) => {

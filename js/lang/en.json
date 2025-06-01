@@ -2,6 +2,7 @@
     "headline": "Amateur Radio Callsign Morse Quiz",
     "start": "Start",
     "pause": "Pause",
+    "stop": "Stop",
     "resume": "Resume",
     "next": "Next callsign",
     "auto": "Automatic",
