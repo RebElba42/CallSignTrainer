@@ -1,6 +1,6 @@
 import { t, setLanguage, lang, availableLanguages } from './i18n.js';
 import { quizNext, getQuizState, setQuizState, setCallsignList } from './quiz.js';
-import { unlockAudioContext } from './morse.js';
+import { unlockAudioContext, playMorse, textToMorse } from './morse.js';
 import { pickPreferredVoice } from './voices.js';
 import { settings, saveSettings, DEFAULTS } from './settings.js';
 import { requestWakeLock, releaseWakeLock } from './wakeLock.js';
@@ -26,6 +26,26 @@ export function isIOSSafari() {
     const isIOS = /iP(ad|hone|od)/i.test(ua);
     const isSafari = !!ua.match(/Safari/i) && !ua.match(/CriOS|FxiOS|EdgiOS/);
     return isIOS && isSafari;
+}
+
+/**
+ * Activate or deactivate the action buttons
+ * @param {boolean} disable - true = deactivate, false = activate
+ */
+function setActionButtonsDisabled(disable) {
+    const { isPaused, isStarted } = getQuizState();
+    const btnIds = [
+        'testMorseBtn',
+        'pauseBtn',
+        'autoSwitch'
+    ];
+    btnIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.disabled = !!disable;
+        }
+    });
+
 }
 
 // Apply the selected theme by updating the CSS link
@@ -77,6 +97,14 @@ export function initUI() {
             </div>
         </div>
     `;
+
+        // Disable the "Test Morse" button if the quiz is started
+        const testBtn = document.getElementById('testMorseBtn');
+        if (testBtn) {
+            const { isStarted } = getQuizState();
+            testBtn.disabled = isStarted;
+        }
+
         document.getElementById('nextBtn').onclick = () => {
             if (!settings.autoMode && isStarted && !isPaused) {
                 let state = getQuizState();
@@ -166,6 +194,11 @@ export function initUI() {
                         <span id="farnsworthWpmValue">${settings.farnsworthWpm} WPM</span> 
                         <small class="text-muted">${t('farnsworth_hint')}</small>
                     </div>
+                    <div class="mb-2 d-flex flex-column">
+                        <button id="testMorseBtn" type="button" class="btn btn-success btn-sm mt-2">
+                            ${t('test_morse')}
+                        </button>
+                    </div>                    
                 </div>
             </div>
         </div>
@@ -259,6 +292,35 @@ export function initUI() {
         </div>
     </div>
     `;
+
+        // Test Morse button
+        document.getElementById('testMorseBtn').addEventListener('click', () => {
+            // Example call sign for testing
+            const testCall = "DL1ABC";
+            // Import the Morse conversion function
+            const morse = textToMorse(testCall);
+            const oldQuizValue = quizContainer.innerHTML;
+            quizContainer.innerHTML = `<div class="alert alert-info text-center py-3">${t('test_morse_pre_hint')}</div>`;
+            setActionButtonsDisabled(true);
+            playMorse(
+                morse,
+                settings.wpm,
+                settings.farnsworthWpm,
+                settings.noiseType,
+                settings.noiseLevel,
+                settings.qsbLevel,
+                settings.qrmLevel,
+                () => {
+                    // Feedback after playing Morse
+                    quizContainer.innerHTML = `<div class="alert alert-info text-center py-3">${t('test_morse') + " ✔"}</div>`;
+                    setTimeout(() => quizContainer.innerHTML = oldQuizValue, 3000);
+                    setActionButtonsDisabled(false);
+                }
+            );
+        });
+        // Disable the test Morse button if the quiz is started
+        const { isStarted } = getQuizState();
+        document.getElementById('testMorseBtn').disabled = isStarted;
 
         // Reset settings button
         document.getElementById('resetSettingsBtn').addEventListener('click', () => {

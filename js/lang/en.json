@@ -51,6 +51,8 @@
     "voice_select": "Select voice",
     "voice_help": "Choose a voice for speech output",
     "voice_test": "Test voice",
+    "test_morse_pre_hint": "Testing settings...",
+    "test_morse": "Test settings (Morse)",
     "wpm_hint": "Please enter a value between 5 and 50.",
     "pause_hint": "Please enter a value between 1 and 10.",
     "repeat_hint": "Please enter a value between 1 and 10.",
