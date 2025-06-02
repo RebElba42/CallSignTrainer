@@ -138,7 +138,7 @@ export function showResult(call, quizContainer, result, updateUI) {
         dummy.rate = 10;
         dummy.onend = () => {
             const langObj = availableLanguages.find(l => l.code === lang);
-            const utter = new SpeechSynthesisUtterance(`${t('solution')} ${call.split('').join(' ')}`);
+            const utter = new SpeechSynthesisUtterance(`${t('solution')} ${call.split('').join('\u200B ')}`);
             utter.lang = langObj ? langObj.voice : 'de-DE';
             pickPreferredVoice(utter);
             window.speechSynthesis.speak(utter);

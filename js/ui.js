@@ -296,7 +296,7 @@ export function initUI() {
         // Test Morse button
         document.getElementById('testMorseBtn').addEventListener('click', () => {
             // Example call sign for testing
-            const testCall = "DL1ABC";
+            const testCall = "DL1ZBC";
             // Import the Morse conversion function
             const morse = textToMorse(testCall);
             const oldQuizValue = quizContainer.innerHTML;

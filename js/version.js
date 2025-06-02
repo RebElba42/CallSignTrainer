@@ -1,4 +1,4 @@
-export const VERSION = "v1.0.2";
+export const VERSION = "v1.0.3";
 
 export function setVersionBadge() {
     // Try to find a footer element, or create one if missing
