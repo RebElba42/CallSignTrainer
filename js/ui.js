@@ -1,3 +1,12 @@
+/**
+ * ui.js
+ * 
+ * Handles all UI rendering and user interaction logic for the CallSignTrainer application.
+ * Includes language selection, settings, controls, theme switching, and button state management.
+ * 
+ * Author: DB4REB
+ * License: MIT
+ */
 import { t, setLanguage, lang, availableLanguages } from './i18n.js';
 import { quizNext, getQuizState, setQuizState, setCallsignList } from './quiz.js';
 import { unlockAudioContext, playMorse, textToMorse } from './morse.js';
@@ -20,7 +29,10 @@ const themeMap = {
     yeti: "css/themes/bootstrap-yeti.min.css"
 };
 
-// check if the browser is iOS Safarix
+/**
+ * Checks if the browser is iOS Safari.
+ * @returns {boolean}
+ */
 export function isIOSSafari() {
     const ua = navigator.userAgent;
     const isIOS = /iP(ad|hone|od)/i.test(ua);
@@ -29,8 +41,8 @@ export function isIOSSafari() {
 }
 
 /**
- * Activate or deactivate the action buttons
- * @param {boolean} disable - true = deactivate, false = activate
+ * Enables or disables main action buttons in the UI.
+ * @param {boolean} disable - true to disable, false to enable
  */
 function setActionButtonsDisabled(disable) {
     const { isPaused, isStarted } = getQuizState();
@@ -48,7 +60,10 @@ function setActionButtonsDisabled(disable) {
 
 }
 
-// Apply the selected theme by updating the CSS link
+/**
+ * Applies the selected Bootstrap theme by updating the CSS link.
+ * @param {string} theme
+ */
 function applyTheme(theme) {
     let themeHref = themeMap[theme] || themeMap['dark'];
     let themeLink = document.getElementById('theme-css');
@@ -61,6 +76,10 @@ function applyTheme(theme) {
     themeLink.href = themeHref;
 }
 
+/**
+ * Initializes the UI, loads settings, renders controls and settings,
+ * and loads the callsign list.
+ */
 export function initUI() {
     const quizContainer = document.getElementById('quiz-container');
     const controls = document.getElementById('controls');

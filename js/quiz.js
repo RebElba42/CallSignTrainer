@@ -1,3 +1,12 @@
+/**
+ * quiz.js
+ * 
+ * Contains the quiz logic for the CallSignTrainer application.
+ * Manages the callsign list, quiz state, Morse playback, and result display.
+ * 
+ * Author: DB4REB
+ * License: MIT
+ */
 import { settings } from './settings.js';
 import { textToMorse, playMorse, stopNoise } from './morse.js';
 import { t, lang, availableLanguages } from './i18n.js';
@@ -10,13 +19,20 @@ let isPaused = false;
 let isStarted = false;
 let pauseCallback = null;
 
-
+/**
+ * Sets and shuffles the callsign list for the quiz.
+ * @param {Array<string>} list - List of callsigns
+ */
 export function setCallsignList(list) {
     rufzeichenListe = list;
     shuffleArray(rufzeichenListe);
     currentIndex = 0;
 }
 
+/**
+ * Shuffles an array in place using Fisher-Yates algorithm.
+ * @param {Array} array
+ */
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -24,6 +40,10 @@ function shuffleArray(array) {
     }
 }
 
+/**
+ * Handles the pre-call announcement (speech or Morse "VVV") before the callsign is played.
+ * @param {Function} nextStep - Callback to continue after pre-call
+ */
 export function doPreCall(nextStep) {
     if (settings.preCallMode === 'speech') {
         if ('speechSynthesis' in window) {
@@ -69,6 +89,12 @@ export function doPreCall(nextStep) {
     }
 }
 
+/**
+ * Advances the quiz to the next callsign and handles Morse playback.
+ * @param {HTMLElement} quizContainer
+ * @param {HTMLElement} result
+ * @param {Function} updateUI
+ */
 export function quizNext(quizContainer, result, updateUI) {
     result.innerHTML = '';
     if (currentIndex >= rufzeichenListe.length) {
@@ -128,6 +154,13 @@ export function quizNext(quizContainer, result, updateUI) {
     });
 }
 
+/**
+ * Displays the result (callsign) and optionally speaks it.
+ * @param {string} call - The callsign
+ * @param {HTMLElement} quizContainer
+ * @param {HTMLElement} result
+ * @param {Function} updateUI
+ */
 export function showResult(call, quizContainer, result, updateUI) {
     stopNoise(false);
     quizContainer.innerHTML = `<div class="alert alert-success text-center py-3">${t('solution')}<br><span class="display-5 fw-bold">${call}</span></div>`;
@@ -156,10 +189,18 @@ export function showResult(call, quizContainer, result, updateUI) {
     }
 }
 
+/**
+ * Returns the current quiz state.
+ * @returns {Object}
+ */
 export function getQuizState() {
     return { isPaused, isStarted, currentIndex, pauseCallback };
 }
 
+/**
+ * Sets the quiz state.
+ * @param {Object} state
+ */
 export function setQuizState(state) {
     isPaused = state.isPaused;
     isStarted = state.isStarted;

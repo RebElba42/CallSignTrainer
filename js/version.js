@@ -1,5 +1,16 @@
+/**
+ * version.js
+ * 
+ * Contains the application version and logic to display it in the UI.
+ * 
+ * Author: DB4REB
+ * License: MIT
+ */
 export const VERSION = "v1.0.3";
 
+/**
+ * Sets or updates the version badge in the footer of the page.
+ */
 export function setVersionBadge() {
     // Try to find a footer element, or create one if missing
     let footer = document.querySelector('footer');

@@ -1,3 +1,11 @@
+/**
+ * settings.js
+ * 
+ * Manages application settings, including defaults, loading, and saving to localStorage.
+ * 
+ * Author: DB4REB
+ * License: MIT
+ */
 export const DEFAULTS = {
     wpm: 20,
     pauseSeconds: 5,
@@ -20,6 +28,9 @@ export const DEFAULTS = {
 
 export let settings = { ...DEFAULTS };
 
+/**
+ * Loads settings from localStorage, falling back to defaults if not present.
+ */
 export function loadSettings() {
     Object.keys(DEFAULTS).forEach(key => {
         const val = localStorage.getItem(key);
@@ -35,6 +46,9 @@ export function loadSettings() {
     });
 }
 
+/**
+ * Saves current settings to localStorage.
+ */
 export function saveSettings() {
     Object.keys(settings).forEach(key => {
         localStorage.setItem(key, settings[key]);

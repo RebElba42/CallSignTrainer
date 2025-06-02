@@ -1,5 +1,17 @@
+/**
+ * voices.js
+ * 
+ * Provides functions for selecting and managing speech synthesis voices.
+ * 
+ * Author: DB4REB
+ * License: MIT
+ */
 import { lang } from './i18n.js';
 
+/**
+ * Picks the preferred voice for the current language and assigns it to the utterance.
+ * @param {SpeechSynthesisUtterance} utter
+ */
 export function pickPreferredVoice(utter) {
     const voices = window.speechSynthesis.getVoices();
     const voiceKey = 'voiceURI_' + lang;

@@ -1,3 +1,12 @@
+/**
+ * morse.js
+ * 
+ * Provides functions for converting text to Morse code and playing Morse code audio.
+ * 
+ * Author: DB4REB
+ * License: MIT
+ */
+
 import { settings } from './settings.js';
 
 export const morseTable = {
@@ -11,6 +20,12 @@ export const morseTable = {
     "9": "----."
 };
 
+/**
+ * Converts a given text string to Morse code using the morseTable.
+ * Non-mappable characters are ignored.
+ * @param {string} text - The input text to convert.
+ * @returns {string} The Morse code representation.
+ */
 export function textToMorse(text) {
     return text.toUpperCase().split('').map(ch => morseTable[ch] || '').join(' ');
 }
@@ -21,6 +36,10 @@ let currentWhiteNoise = null;
 let currentNoiseGain = null;
 let currentQrmOsc = null;
 
+/**
+ * Unlocks the AudioContext on user interaction to enable audio playback,
+ * which is required by some browsers' autoplay policies.
+ */
 export function unlockAudioContext() {
     if (!audioCtx || audioCtx.state === 'closed') {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -38,6 +57,11 @@ export function unlockAudioContext() {
     }
 }
 
+/**
+ * Stops all currently playing noise and optionally cancels speech synthesis.
+ * Cleans up audio nodes for white noise, QRM, and other noise types.
+ * @param {boolean} cancelSpeech - Whether to cancel speech synthesis (default: true).
+ */
 export function stopNoise(cancelSpeech = true) {
     if (currentWhiteNoise) {
         try {
@@ -63,6 +87,18 @@ export function stopNoise(cancelSpeech = true) {
     }
 }
 
+/**
+ * Plays a Morse code string as audio, including optional noise and QRM/QSB effects.
+ * Calls the onComplete callback when playback is finished.
+ * @param {string} morse - Morse code string to play.
+ * @param {number} wpm - Words per minute (character speed).
+ * @param {number} farnsworthWpm - Farnsworth speed (overall speed).
+ * @param {string} noiseType - Type of noise to add ("white", "pink", "brown", "qrn", "qrm").
+ * @param {number} noiseLevel - Noise volume (0-100).
+ * @param {number} qsbLevel - QSB (fading) level (0-100).
+ * @param {number} qrmLevel - QRM (interference) level (0-73).
+ * @param {Function} onComplete - Callback when playback is finished.
+ */
 export function playMorse(morse, wpm, farnsworthWpm, noiseType, noiseLevel, qsbLevel, qrmLevel, onComplete) {
     const unit = 1200 / wpm;
     const farnsworthUnit = 1200 / farnsworthWpm;
@@ -175,6 +211,17 @@ export function playMorse(morse, wpm, farnsworthWpm, noiseType, noiseLevel, qsbL
     }, delay * 1000);
 }
 
+/**
+ * Plays a Morse code sequence as audio tones using the given AudioContext.
+ * Handles Farnsworth timing and QSB effects.
+ * Calls onComplete when finished.
+ * @param {AudioContext} ctx - The audio context to use.
+ * @param {string} morse - Morse code string.
+ * @param {number} unit - Duration of a Morse "dit" in ms.
+ * @param {number} farnsworthUnit - Farnsworth unit duration in ms.
+ * @param {number} qsbLevel - QSB (fading) level.
+ * @param {Function} onComplete - Callback when playback is finished.
+ */
 function playCallsignMorse(ctx, morse, unit, farnsworthUnit, qsbLevel, onComplete) {
     let time = ctx.currentTime;
 

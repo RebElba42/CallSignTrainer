@@ -1,4 +1,12 @@
-// Start of the main application script
+/**
+ * app.js
+ * 
+ * Main entry point for the CallSignTrainer application.
+ * Initializes i18n, settings, UI, version badge, and handles wake lock events.
+ * 
+ * Author: DB4REB
+ * License: MIT
+ */
 import { initUI } from './ui.js';
 import { loadSettings } from './settings.js';
 import { initI18n } from './i18n.js';
