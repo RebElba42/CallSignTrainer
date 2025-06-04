@@ -88,6 +88,9 @@ export function initUI() {
     const languageSelect = document.getElementById('language-select');
     const headline = document.getElementById('headline');
 
+    /**
+    * Renders the language selection dropdown and handles language changes.
+    */
     function renderLanguageSelect() {
         let html = `<div class="d-flex justify-content-center mb-2">
             <select id="langSelect" class="form-select form-select-sm w-auto">`;
@@ -102,6 +105,9 @@ export function initUI() {
         };
     }
 
+    /**
+     * Renders the main quiz control buttons and handles their events.
+     */
     function renderControls() {
         const { isPaused, isStarted } = getQuizState();
         controls.innerHTML = `
@@ -169,6 +175,9 @@ export function initUI() {
         };
     }
 
+    /**
+     * Renders the settings accordion and handles all settings-related events.
+     */
     function renderSettings() {
         settingsDiv.innerHTML = `
     <div class="accordion" id="settingsAccordion">
@@ -468,6 +477,9 @@ export function initUI() {
         });
     }
 
+    /**
+     * Updates all UI components (headline, language, settings, controls, quiz container).
+     */
     function updateAll() {
         headline.innerText = t('headline');
         renderLanguageSelect();

@@ -30,8 +30,9 @@ export function setCallsignList(list) {
 }
 
 /**
- * Shuffles an array in place using Fisher-Yates algorithm.
- * @param {Array} array
+ * Shuffles an array in place using the Fisher-Yates algorithm.
+ * Ensures each permutation is equally likely.
+ * @param {Array} array - The array to shuffle.
  */
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
