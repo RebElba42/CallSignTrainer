@@ -89,6 +89,31 @@ export function initUI() {
     const headline = document.getElementById('headline');
 
     /**
+     * Loads the callsign list and applies the current category filter.
+     */
+    function fetchAndSetCallsignList() {
+        fetch('data/rufzeichen.json')
+            .then(res => res.json())
+            .then(data => {
+                let filtered = data;
+                if (settings.callsignCategory === 'europe') {
+                    // List of European prefixes (expand as needed)
+                    const euPrefixes = [
+                        "DL", "DB", "DC", "DD", "DE", "DF", "DG", "DH", "DJ", "DK", "DM", "DO", "DP", "DR", // Germany
+                        "ON", "OE", "HB9", "9A", "SM", "SP", "G", "M", "F", "I", "UA", "R", "OE", "LU"
+                    ];
+                    filtered = data.filter(call => euPrefixes.some(prefix => call.startsWith(prefix)));
+                }
+                setCallsignList(filtered);
+                updateAll();
+                applyTheme(settings.theme);
+            })
+            .catch(() => {
+                quizContainer.innerHTML = `<div class="alert alert-danger text-center py-3">${t('error_loading')}</div>`;
+            });
+    }
+
+    /**
     * Renders the language selection dropdown and handles language changes.
     */
     function renderLanguageSelect() {
@@ -284,6 +309,17 @@ export function initUI() {
                             <label class="form-check-label" for="preCallVVV">${t('pre_call_morse_v')}</label>
                         </div>
                     </div>
+                    <div>
+                        <label class="form-label mb-0 small w-100">${t('callsign_category')}</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="callsignCategory" id="callsignCategoryInternational" value="international" ${settings.callsignCategory === 'international' ? 'checked' : ''}>
+                            <label class="form-check-label" for="callsignCategoryInternational">${t('callsign_category_international')}</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="callsignCategory" id="callsignCategoryEurope" value="europe" ${settings.callsignCategory === 'europe' ? 'checked' : ''}>
+                            <label class="form-check-label" for="callsignCategoryEurope">${t('callsign_category_europe')}</label>
+                        </div>
+                    </div>
                     <div class="mb-2 d-flex flex-column">
                         <label for="themeSelect" class="form-label mb-0 small w-100">${t('theme')}</label>
                         <select id="themeSelect" class="form-select form-select-sm" style="max-width:200px;">
@@ -320,6 +356,15 @@ export function initUI() {
         </div>
     </div>
     `;
+
+        // Callsign category event handler
+        document.querySelectorAll('input[name="callsignCategory"]').forEach(el => {
+            el.addEventListener('change', (e) => {
+                settings.callsignCategory = e.target.value;
+                saveSettings();
+                fetchAndSetCallsignList();
+            });
+        });
 
         // Test Morse button
         document.getElementById('testMorseBtn').addEventListener('click', () => {
@@ -491,15 +536,8 @@ export function initUI() {
         }
     }
 
+
     // Load the call sign list and translations on startup
-    fetch('data/rufzeichen.json')
-        .then(res => res.json())
-        .then(data => {
-            setCallsignList(data);
-            updateAll();
-            applyTheme(settings.theme);
-        })
-        .catch(() => {
-            quizContainer.innerHTML = `<div class="alert alert-danger text-center py-3">${t('error_loading')}</div>`;
-        });
+    fetchAndSetCallsignList();
+
 }

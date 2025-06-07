@@ -22,8 +22,8 @@ export const DEFAULTS = {
     theme: 'dark',
     delayBeforePreCall: 1,
     delayBeforeMorse: 2,
-    delayBeforeSolution: 4
-
+    delayBeforeSolution: 4,
+    callsignCategory: "international"
 };
 
 export let settings = { ...DEFAULTS };

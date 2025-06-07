@@ -65,6 +65,8 @@
     "delay_before_solution": "Wartezeit nach letztem Versuch (Sek.)",
     "delay_before_solution_hint": "...bevor die Lösung angezeigt wird.",
     "reset_settings": "Einstellungen zurücksetzen",
-    "reset_settings_confirm": "Willst du wirklich alle Einstellungen auf Werkseinstellungen zurücksetzen?"
-
+    "reset_settings_confirm": "Willst du wirklich alle Einstellungen auf Werkseinstellungen zurücksetzen?",
+    "callsign_category": "Rufzeichen-Kategorie",
+    "callsign_category_europe": "Europa",
+    "callsign_category_international": "International"    
 }
