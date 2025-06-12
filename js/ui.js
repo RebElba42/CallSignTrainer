@@ -372,6 +372,7 @@ export function initUI() {
         });
 
         // Event-Handler for Both Test events
+        const { isStarted } = getQuizState();
         ['testMorseBtn', 'testMorseBtnNoise'].forEach(id => {
             const btn = document.getElementById(id);
             if (btn) {
@@ -379,11 +380,6 @@ export function initUI() {
                 btn.disabled = getQuizState().isStarted;
             }
         });
-
-        // Disable the test Morse button if the quiz is started
-        const { isStarted } = getQuizState();
-        document.getElementById('testMorseBtn').disabled = isStarted;
-        document.getElementById('testMorseBtnNoise').disabled = isStarted;
 
         // Reset settings button
         document.getElementById('resetSettingsBtn').addEventListener('click', () => {
