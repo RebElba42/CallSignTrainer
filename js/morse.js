@@ -21,6 +21,14 @@ export const morseTable = {
 };
 
 /**
+ * Seconds before noise stops after the last Morse character.
+ * This is used to ensure the noise doesn't cut off abruptly.
+ * It allows the user to hear the end of the Morse transmission.
+ * This is especially important for the last character in a callsign.
+ */
+const NOISE_TAIL_SECONDS = 1.0; 
+
+/**
  * Converts a given text string to Morse code using the morseTable.
  * Non-mappable characters are ignored.
  * @param {string} text - The input text to convert.
@@ -256,7 +264,9 @@ function playCallsignMorse(ctx, morse, unit, farnsworthUnit, qsbLevel, onComplet
         }
     }
     setTimeout(() => {
-        stopNoise();
+        setTimeout(() => {
+            stopNoise();
+        }, NOISE_TAIL_SECONDS * 1000);
         if (onComplete) onComplete();
     }, (time - ctx.currentTime) * 1000);
 }
