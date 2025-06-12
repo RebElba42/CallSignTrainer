@@ -1,71 +1,107 @@
-# gen_callsigns.py
-# This script generates random amateur radio callsigns for German and international prefixes.
-# It creates about 10,000 German and 10,000 international callsigns, shuffles them,
-# and saves the result as a JSON file ("rufzeichen_international.json").
-#
-# Usage:
-#   python gen_callsigns.py
-#
-# The output file can be used for Morse code training apps or similar projects.
 import random
 import json
 
-# German prefixes
-german_prefixes = ["DL", "DB", "DC", "DD", "DE", "DF", "DG", "DH", "DJ", "DK", "DM", "DO", "DP", "DR"]
+# Präfix-Definitionen mit Regeln
+prefix_rules = {
+    # Deutschland
+    "DL": {"ziffer": True, "suffix": (2, 3)},
+    "DB": {"ziffer": True, "suffix": (2, 3)},
+    "DC": {"ziffer": True, "suffix": (2, 3)},
+    "DD": {"ziffer": True, "suffix": (2, 3)},
+    "DE": {"ziffer": True, "suffix": (2, 3)},
+    "DF": {"ziffer": True, "suffix": (2, 3)},
+    "DG": {"ziffer": True, "suffix": (2, 3)},
+    "DH": {"ziffer": True, "suffix": (2, 3)},
+    "DJ": {"ziffer": True, "suffix": (2, 3)},
+    "DK": {"ziffer": True, "suffix": (2, 3)},
+    "DM": {"ziffer": True, "suffix": (2, 3)},
+    "DO": {"ziffer": True, "suffix": (2, 3)},
+    "DP": {"ziffer": True, "suffix": (2, 3)},
+    "DR": {"ziffer": True, "suffix": (2, 3)},
+    # Schweiz
+    "HB9": {"ziffer": False, "suffix": (2, 3)},
+    # USA
+    "K": {"ziffer": True, "suffix": (1, 3)},
+    "N": {"ziffer": True, "suffix": (1, 3)},
+    "W": {"ziffer": True, "suffix": (1, 3)},
+    "AA": {"ziffer": True, "suffix": (2, 3)},
+    "AB": {"ziffer": True, "suffix": (2, 3)},
+    "AC": {"ziffer": True, "suffix": (2, 3)},
+    # Kanada
+    "VE": {"ziffer": True, "suffix": (2, 3)},
+    "VA": {"ziffer": True, "suffix": (2, 3)},
+    "VO": {"ziffer": True, "suffix": (2, 3)},
+    "VY": {"ziffer": True, "suffix": (2, 3)},
+    # UK
+    "G": {"ziffer": True, "suffix": (2, 3)},
+    "M": {"ziffer": True, "suffix": (2, 3)},
+    # Frankreich, Italien, Japan, Australien, etc.
+    "F": {"ziffer": True, "suffix": (2, 3)},
+    "I": {"ziffer": True, "suffix": (2, 3)},
+    "JA": {"ziffer": True, "suffix": (2, 3)},
+    "VK": {"ziffer": True, "suffix": (2, 3)},
+    "ZS": {"ziffer": True, "suffix": (2, 3)},
+    "PY": {"ziffer": True, "suffix": (2, 3)},
+    "LU": {"ziffer": True, "suffix": (2, 3)},
+    "UA": {"ziffer": True, "suffix": (2, 3)},
+    "R": {"ziffer": True, "suffix": (2, 3)},
+    "ON": {"ziffer": True, "suffix": (2, 3)},
+    "OE": {"ziffer": True, "suffix": (2, 3)},
+    "9A": {"ziffer": True, "suffix": (2, 3)},
+    "SM": {"ziffer": True, "suffix": (2, 3)},
+    "SP": {"ziffer": True, "suffix": (2, 3)},
+    "YV": {"ziffer": True, "suffix": (2, 3)},
+    "HS": {"ziffer": True, "suffix": (2, 3)},
+    "9M": {"ziffer": False, "suffix": (2, 3)},
+    "SU": {"ziffer": True, "suffix": (2, 3)},
+    "ZL": {"ziffer": True, "suffix": (2, 3)},
+}
 
-# International prefixes
-international_prefixes = [
-    "K", "N", "W", "AA", "AB", "AC",  # USA
-    "VE", "VA", "VO", "VY",           # Canada
-    "G", "M",                         # United Kingdom
-    "F",                              # France
-    "I",                              # Italy
-    "JA",                             # Japan
-    "VK",                             # Australia
-    "ZS",                             # South Africa
-    "PY",                             # Brazil
-    "LU",                             # Argentina
-    "UA", "R",                        # Russia
-    "ON",                             # Belgium
-    "OE",                             # Austria
-    "HB9",                            # Switzerland
-    "9A",                             # Croatia
-    "SM",                             # Sweden
-    "SP",                             # Poland
-    "YV",                             # Venezuela
-    "HS",                             # Thailand
-    "9M",                             # Malaysia
-    "SU",                             # Egypt
-    "ZL",                             # New Zealand
-]
+all_prefixes = list(prefix_rules.keys())
+
+
+def generate_suffix(length):
+    # Kein Suffix mit Q am Anfang (optional)
+    while True:
+        suffix = "".join(random.choices("ABCDEFGHIJKLMNOPQRSTUVWXYZ", k=length))
+        if not suffix.startswith("Q"):
+            return suffix
+
 
 def generate_callsign(prefix):
-    """
-    Generate a random callsign for a given prefix.
-    If the prefix already contains a digit (e.g. 'HB9'), do not add a number.
-    Otherwise, add a random digit between 0 and 9.
-    The suffix consists of 2 or 3 random uppercase letters.
-    """
-    if any(char.isdigit() for char in prefix):
-        number = ""
+    rule = prefix_rules[prefix]
+    # Special case for Croatia: allow both with and without digit after 9A
+    if prefix == "9A":
+        # 50% chance for digit, 50% for no digit (adjust as needed)
+        if random.random() < 0.5:
+            ziffer = str(random.randint(0, 9))
+        else:
+            ziffer = ""
     else:
-        number = str(random.randint(0, 9))
-    suffix = ''.join(random.choices("ABCDEFGHIJKLMNOPQRSTUVWXYZ", k=random.randint(2, 3)))
-    return prefix + number + suffix
+        ziffer = str(random.randint(0, 9)) if rule["ziffer"] else ""
+    suffix_len = random.randint(rule["suffix"][0], rule["suffix"][1])
+    suffix = generate_suffix(suffix_len)
+    return prefix + ziffer + suffix
 
-# Generate about 10,000 German and 10,000 international callsigns
+
 callsigns = []
 
 for _ in range(10000):
-    callsigns.append(generate_callsign(random.choice(german_prefixes)))
+    prefix = random.choice(
+        [
+            p
+            for p in all_prefixes
+            if p in prefix_rules and p not in ["K", "N", "W", "AA", "AB", "AC"]
+        ]
+    )
+    callsigns.append(generate_callsign(prefix))
 
 for _ in range(10000):
-    callsigns.append(generate_callsign(random.choice(international_prefixes)))
+    prefix = random.choice([p for p in ["K", "N", "W", "AA", "AB", "AC"]])
+    callsigns.append(generate_callsign(prefix))
 
-# Shuffle the list for randomness
 random.shuffle(callsigns)
 
-# Output as JSON file
 with open("rufzeichen_international.json", "w") as f:
     json.dump(callsigns, f, indent=2)
 
