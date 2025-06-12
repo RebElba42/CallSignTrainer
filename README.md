@@ -5,9 +5,12 @@ CallSignTrainer is a web application for practicing and training amateur radio c
 ## Features
 
 - Random selection and playback of amateur radio call signs as Morse code (CW)
-- Adjustable speed (WPM), pause duration, repetitions, noise level, and QSB simulation
+- Adjustable speed (WPM), pause duration, repetitions
+- **Farnsworth spacing**: Adjustable character and word spacing for effective learning
+- Adjustable noise level and simulation of different noise types (**white, pink, brown noise, QRN**)
+- **QSB (fading) and QRM (interference) simulation** for realistic practice
 - Speech output for hints and solutions (Text-to-Speech)
-- German and English Language UI
+- German and English language UI
 - Selectable color themes (including Darkmode and various Bootswatch themes)
 - Supports desktop and mobile browsers (including Firefox, Safari, Chrome)
 - Automatic and manual mode

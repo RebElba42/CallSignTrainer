@@ -52,7 +52,7 @@
     "voice_help": "Wähle eine Stimme für die Sprachausgabe",
     "voice_test": "Stimme testen",
     "test_morse_pre_hint": "Einstellungen werden getestet...",
-    "test_morse": "Einstellungen testen (Morse)",
+    "test_morse": "Einstellungen testen (Morsen)",
     "wpm_hint": "Bitte einen Wert zwischen 5 und 50 eingeben.",
     "pause_hint": "Bitte einen Wert zwischen 1 und 10 eingeben.",
     "repeat_hint": "Bitte einen Wert zwischen 1 und 10 eingeben.",

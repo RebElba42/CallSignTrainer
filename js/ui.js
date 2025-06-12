@@ -509,7 +509,7 @@ export function initUI() {
                 settings.qsbLevel,
                 settings.qrmLevel,
                 () => {
-                    quizContainer.innerHTML = `<div class="alert alert-info text-center py-3">${t('test_morse') + " ✔"}</div>`;
+                    quizContainer.innerHTML = `<div class="alert alert-info text-center py-3">${t('test_morse') + " ✅"}</div>`;
                     setTimeout(() => quizContainer.innerHTML = oldQuizValue, 3000);
                     setActionButtonsDisabled(false);
                 }
