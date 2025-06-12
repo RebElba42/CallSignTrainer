@@ -287,6 +287,11 @@ export function initUI() {
                         <input type="range" min="0" max="100" step="1" class="form-range" id="qsbInput" value="${settings.qsbLevel}" style="max-width:200px;">
                         <span id="qsbValue">${settings.qsbLevel}</span>%
                     </div>
+                    <div class="mb-2 d-flex flex-column">
+                        <button id="testMorseBtnNoise" type="button" class="btn btn-outline-success btn-sm mt-2">
+                            ${t('test_morse')}
+                        </button>
+                    </div>                    
                 </div>
             </div>
         </div>
@@ -366,34 +371,19 @@ export function initUI() {
             });
         });
 
-        // Test Morse button
-        document.getElementById('testMorseBtn').addEventListener('click', () => {
-            // Example call sign for testing
-            const testCall = "DL1ZBC";
-            // Import the Morse conversion function
-            const morse = textToMorse(testCall);
-            const oldQuizValue = quizContainer.innerHTML;
-            quizContainer.innerHTML = `<div class="alert alert-info text-center py-3">${t('test_morse_pre_hint')}</div>`;
-            setActionButtonsDisabled(true);
-            playMorse(
-                morse,
-                settings.wpm,
-                settings.farnsworthWpm,
-                settings.noiseType,
-                settings.noiseLevel,
-                settings.qsbLevel,
-                settings.qrmLevel,
-                () => {
-                    // Feedback after playing Morse
-                    quizContainer.innerHTML = `<div class="alert alert-info text-center py-3">${t('test_morse') + " ✔"}</div>`;
-                    setTimeout(() => quizContainer.innerHTML = oldQuizValue, 3000);
-                    setActionButtonsDisabled(false);
-                }
-            );
+        // Event-Handler for Both Test events
+        ['testMorseBtn', 'testMorseBtnNoise'].forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) {
+                btn.addEventListener('click', handleTestMorse);
+                btn.disabled = getQuizState().isStarted;
+            }
         });
+
         // Disable the test Morse button if the quiz is started
         const { isStarted } = getQuizState();
         document.getElementById('testMorseBtn').disabled = isStarted;
+        document.getElementById('testMorseBtnNoise').disabled = isStarted;
 
         // Reset settings button
         document.getElementById('resetSettingsBtn').addEventListener('click', () => {
@@ -502,6 +492,30 @@ export function initUI() {
             });
             voiceSelect.value = savedVoiceURI;
         }
+
+        // Test Morse function
+        function handleTestMorse() {
+            const testCall = "DL1ZBC";
+            const morse = textToMorse(testCall);
+            const oldQuizValue = quizContainer.innerHTML;
+            quizContainer.innerHTML = `<div class="alert alert-info text-center py-3">${t('test_morse_pre_hint')}</div>`;
+            setActionButtonsDisabled(true);
+            playMorse(
+                morse,
+                settings.wpm,
+                settings.farnsworthWpm,
+                settings.noiseType,
+                settings.noiseLevel,
+                settings.qsbLevel,
+                settings.qrmLevel,
+                () => {
+                    quizContainer.innerHTML = `<div class="alert alert-info text-center py-3">${t('test_morse') + " ✔"}</div>`;
+                    setTimeout(() => quizContainer.innerHTML = oldQuizValue, 3000);
+                    setActionButtonsDisabled(false);
+                }
+            );
+        }
+
         if ('speechSynthesis' in window) {
             populateVoices();
             window.speechSynthesis.onvoiceschanged = populateVoices;
