@@ -23,11 +23,29 @@ export const DEFAULTS = {
     delayBeforePreCall: 1,
     delayBeforeMorse: 2,
     delayBeforeSolution: 4,
-    callsignCategory: "international"
+    callsignCategory: "international",
+    minFrequency: 700,
+    maxFrequency: 700,
 };
 
 export let settings = { ...DEFAULTS };
+let _currentCallsignFrequency = 700;
 
+/**
+ * Sets the current frequency for the callsign in the current round.
+ * @param {number} freq - The frequency to use for the current callsign.
+ */
+export function setCurrentCallsignFrequency(freq) {
+    _currentCallsignFrequency = freq;
+}
+
+/**
+ * Gets the current frequency for the callsign in the current round.
+ * @returns {number} The frequency used for the current callsign.
+ */
+export function getCurrentCallsignFrequency() {
+    return _currentCallsignFrequency;
+}
 /**
  * Loads settings from localStorage, falling back to defaults if not present.
  */

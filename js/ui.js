@@ -248,6 +248,16 @@ export function initUI() {
                         <small class="text-muted">${t('farnsworth_hint')}</small>
                     </div>
                     <div class="mb-2 d-flex flex-column">
+                        <label for="minFrequencyInput" class="form-label mb-0 small w-100">${t('min_frequency')}</label>
+                        <input type="number" min="300" max="1000" step="1" class="form-control form-control-sm" style="max-width:120px;" id="minFrequencyInput" value="${settings.minFrequency}">
+                    </div>
+                    <div class="mb-2 d-flex flex-column">
+                        <label for="maxFrequencyInput" class="form-label mb-0 small w-100">${t('max_frequency')}</label>
+                        <input type="number" min="300" max="1000" step="1" class="form-control form-control-sm" style="max-width:120px;" id="maxFrequencyInput" value="${settings.maxFrequency}">
+                        <div id="frequencyFeedback" class="invalid-feedback"></div>
+                        <small class="text-muted">${t('frequency_hint')}</small>
+                    </div>
+                    <div class="mb-2 d-flex flex-column">
                         <button id="testMorseBtn" type="button" class="btn btn-outline-success btn-sm mt-2">
                             ${t('test_morse')}
                         </button>
@@ -467,6 +477,51 @@ export function initUI() {
             settings.theme = e.target.value;
             saveSettings();
             applyTheme(settings.theme);
+        });
+
+        const minFreqInput = document.getElementById('minFrequencyInput');
+        const maxFreqInput = document.getElementById('maxFrequencyInput');
+        const freqFeedback = document.getElementById('frequencyFeedback');
+
+        function validateFrequencyInputs() {
+            const min = Number(minFreqInput.value);
+            const max = Number(maxFreqInput.value);
+            let valid = true;
+            if (min >= max) {
+                minFreqInput.classList.add('is-invalid');
+                maxFreqInput.classList.add('is-invalid');
+                freqFeedback.innerText = t('frequency_invalid');
+                valid = false;
+            } else {
+                minFreqInput.classList.remove('is-invalid');
+                maxFreqInput.classList.remove('is-invalid');
+                freqFeedback.innerText = '';
+            }
+            return valid;
+        }
+
+        minFreqInput.addEventListener('change', (e) => {
+            let min = Math.max(300, Math.min(1000, Number(e.target.value)));
+            minFreqInput.value = min;
+            if (min >= settings.maxFrequency) {
+                validateFrequencyInputs();
+                return;
+            }
+            settings.minFrequency = min;
+            saveSettings();
+            validateFrequencyInputs();
+        });
+
+        maxFreqInput.addEventListener('change', (e) => {
+            let max = Math.max(300, Math.min(1000, Number(e.target.value)));
+            maxFreqInput.value = max;
+            if (max <= settings.minFrequency) {
+                validateFrequencyInputs();
+                return;
+            }
+            settings.maxFrequency = max;
+            saveSettings();
+            validateFrequencyInputs();
         });
 
         // Voice selection and test button

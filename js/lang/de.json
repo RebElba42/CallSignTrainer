@@ -68,5 +68,9 @@
     "reset_settings_confirm": "Willst du wirklich alle Einstellungen auf Werkseinstellungen zurücksetzen?",
     "callsign_category": "Rufzeichen-Kategorie",
     "callsign_category_europe": "Europa",
-    "callsign_category_international": "International"    
+    "callsign_category_international": "International",
+    "min_frequency": "Minimale Frequenz (Hz)",
+    "max_frequency": "Maximale Frequenz (Hz)",
+    "frequency_hint": "Die Morse-Frequenz wird für jedes Rufzeichen zufällig zwischen Minimum und Maximum gewählt.",
+    "frequency_invalid": "Der Minimalwert muss kleiner als der Maximalwert sein."
 }

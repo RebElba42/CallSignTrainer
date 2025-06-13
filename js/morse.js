@@ -7,7 +7,7 @@
  * License: MIT
  */
 
-import { settings } from './settings.js';
+import { settings, getCurrentCallsignFrequency } from './settings.js';
 
 export const morseTable = {
     "A": ".-", "B": "-...", "C": "-.-.", "D": "-..", "E": ".",
@@ -26,7 +26,7 @@ export const morseTable = {
  * It allows the user to hear the end of the Morse transmission.
  * This is especially important for the last character in a callsign.
  */
-const NOISE_TAIL_SECONDS = 1.0; 
+const NOISE_TAIL_SECONDS = 1.0;
 
 /**
  * Converts a given text string to Morse code using the morseTable.
@@ -215,7 +215,7 @@ export function playMorse(morse, wpm, farnsworthWpm, noiseType, noiseLevel, qsbL
     const delay = isVVV ? 0 : (settings.delayBeforeMorse || 0);
 
     setTimeout(() => {
-        playCallsignMorse(ctx, morse, unit, farnsworthUnit, qsbLevel, onComplete);
+        playCallsignMorse(ctx, morse, unit, farnsworthUnit, qsbLevel, onComplete, isVVV);
     }, delay * 1000);
 }
 
@@ -230,8 +230,13 @@ export function playMorse(morse, wpm, farnsworthWpm, noiseType, noiseLevel, qsbL
  * @param {number} qsbLevel - QSB (fading) level.
  * @param {Function} onComplete - Callback when playback is finished.
  */
-function playCallsignMorse(ctx, morse, unit, farnsworthUnit, qsbLevel, onComplete) {
+function playCallsignMorse(ctx, morse, unit, farnsworthUnit, qsbLevel, onComplete, isVVV) {
     let time = ctx.currentTime;
+    let frequency = getCurrentCallsignFrequency();
+
+    if (isVVV) {
+        frequency = 700;
+    } 
 
     // Play a single Morse tone
     function playTone(duration) {
@@ -239,7 +244,7 @@ function playCallsignMorse(ctx, morse, unit, farnsworthUnit, qsbLevel, onComplet
         const gain = ctx.createGain();
 
         osc.type = 'sine';
-        osc.frequency.value = 700;
+        osc.frequency.value = frequency;
 
         let minQsb = 1 - (qsbLevel / 100);
         let qsb = qsbLevel > 0 ? (minQsb + Math.random() * (1 - minQsb)) : 1.0;

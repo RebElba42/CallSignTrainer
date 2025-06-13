@@ -7,7 +7,7 @@
  * Author: DB4REB
  * License: MIT
  */
-import { settings } from './settings.js';
+import { settings, setCurrentCallsignFrequency } from './settings.js';
 import { textToMorse, playMorse, stopNoise } from './morse.js';
 import { t, lang, availableLanguages } from './i18n.js';
 import { pickPreferredVoice } from './voices.js';
@@ -103,6 +103,11 @@ export function quizNext(quizContainer, result, updateUI) {
         currentIndex = 0;
     }
     const call = rufzeichenListe[currentIndex];
+    
+    // Set the current callsign frequency
+    setCurrentCallsignFrequency(
+        Math.floor(Math.random() * (settings.maxFrequency - settings.minFrequency + 1)) + settings.minFrequency
+    );
 
     if (!settings.autoMode) {
         requestWakeLock(); // Wake Lock auch im manuellen Modus aktivieren
