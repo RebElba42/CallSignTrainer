@@ -24,8 +24,8 @@ export const DEFAULTS = {
     delayBeforeMorse: 2,
     delayBeforeSolution: 4,
     callsignCategory: "international",
-    minFrequency: 700,
-    maxFrequency: 700,
+    minFrequency: 600,
+    maxFrequency: 900,
 };
 
 export let settings = { ...DEFAULTS };
