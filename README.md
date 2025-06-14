@@ -1,6 +1,6 @@
 # CallSignTrainer
 
-CallSignTrainer is a web application for practicing and training amateur radio call signs in Morse code (CW).
+CallSign Trainer is a web application for practicing and training amateur radio call signs in Morse code (CW) without using Pen & Paper (Ear-Reading).
 
 ## Features
 
