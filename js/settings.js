@@ -63,6 +63,19 @@ export function loadSettings() {
             }
         }
     });
+
+    // set language based on localStorage or browser settings
+    if (!localStorage.getItem('lang')) {
+        const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+        if (browserLang.startsWith('de')) {
+            settings.lang = 'de';
+        } else if (browserLang.startsWith('en')) {
+            settings.lang = 'en';
+        } else {
+            settings.lang = 'en';
+        }
+        localStorage.setItem('lang', settings.lang);
+    }
 }
 
 /**

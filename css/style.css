@@ -7,3 +7,24 @@ body {
         max-width: 700px;
     }
 }
+
+.version-row {
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+    min-height: 0;
+}
+
+.version-badge {
+    background: linear-gradient(90deg, #e0e0e0 0%, #bdbdbd 100%);
+    color: #222;
+    border: 1.5px solid #888;
+    border-radius: 0.7em;
+    font-size: 0.85em;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 0.05em 0.6em;
+    letter-spacing: 0.03em;
+    vertical-align: middle;
+    margin: 0;
+}
