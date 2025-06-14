@@ -6,7 +6,7 @@
  * Author: DB4REB
  * License: MIT
  */
-export const VERSION = "v1.0.9";
+export const VERSION = "v1.1.0";
 
 /**
  * Sets or updates the version badge in the footer of the page.

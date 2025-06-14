@@ -236,7 +236,9 @@ function playCallsignMorse(ctx, morse, unit, farnsworthUnit, qsbLevel, onComplet
 
     if (isVVV) {
         frequency = 700;
-    } 
+    }
+
+    //console.log(`Playing Morse: ${morse} at frequency ${frequency}Hz with unit ${unit}ms and farnsworth unit ${farnsworthUnit}ms`);
 
     // Play a single Morse tone
     function playTone(duration) {
@@ -248,7 +250,10 @@ function playCallsignMorse(ctx, morse, unit, farnsworthUnit, qsbLevel, onComplet
 
         let minQsb = 1 - (qsbLevel / 100);
         let qsb = qsbLevel > 0 ? (minQsb + Math.random() * (1 - minQsb)) : 1.0;
-        gain.gain.value = qsb;
+        gain.gain.setValueAtTime(0, time); // Start silent
+        gain.gain.linearRampToValueAtTime(qsb, time + 0.005); // Fade-in in 5ms
+        gain.gain.setValueAtTime(qsb, time + duration / 1000 - 0.005); // Hold level
+        gain.gain.linearRampToValueAtTime(0, time + duration / 1000); // Fade-out in 5ms
 
         osc.connect(gain).connect(ctx.destination);
         osc.start(time);

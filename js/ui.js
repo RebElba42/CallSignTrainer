@@ -11,7 +11,7 @@ import { t, setLanguage, lang, availableLanguages } from './i18n.js';
 import { quizNext, getQuizState, setQuizState, setCallsignList } from './quiz.js';
 import { unlockAudioContext, playMorse, textToMorse } from './morse.js';
 import { pickPreferredVoice } from './voices.js';
-import { settings, saveSettings, DEFAULTS } from './settings.js';
+import { settings, saveSettings, setCurrentCallsignFrequency, DEFAULTS } from './settings.js';
 import { requestWakeLock, releaseWakeLock } from './wakeLock.js';
 
 // Theme mapping for Bootstrap themes
@@ -503,7 +503,7 @@ export function initUI() {
         minFreqInput.addEventListener('change', (e) => {
             let min = Math.max(300, Math.min(1000, Number(e.target.value)));
             minFreqInput.value = min;
-            if (min >= settings.maxFrequency) {
+            if (min > settings.maxFrequency) {
                 validateFrequencyInputs();
                 return;
             }
@@ -515,7 +515,7 @@ export function initUI() {
         maxFreqInput.addEventListener('change', (e) => {
             let max = Math.max(300, Math.min(1000, Number(e.target.value)));
             maxFreqInput.value = max;
-            if (max <= settings.minFrequency) {
+            if (max < settings.minFrequency) {
                 validateFrequencyInputs();
                 return;
             }
@@ -550,6 +550,7 @@ export function initUI() {
             const morse = textToMorse(testCall);
             const oldQuizValue = quizContainer.innerHTML;
             quizContainer.innerHTML = `<div class="alert alert-info text-center py-3">${t('test_morse_pre_hint')}</div>`;
+            setCurrentCallsignFrequency();
             setActionButtonsDisabled(true);
             playMorse(
                 morse,

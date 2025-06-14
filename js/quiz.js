@@ -104,10 +104,8 @@ export function quizNext(quizContainer, result, updateUI) {
     }
     const call = rufzeichenListe[currentIndex];
     
-    // Set the current callsign frequency
-    setCurrentCallsignFrequency(
-        Math.floor(Math.random() * (settings.maxFrequency - settings.minFrequency + 1)) + settings.minFrequency
-    );
+    // Set the current callsign frequency to a new random value
+    setCurrentCallsignFrequency();
 
     if (!settings.autoMode) {
         requestWakeLock(); // Wake Lock auch im manuellen Modus aktivieren

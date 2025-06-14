@@ -33,10 +33,11 @@ let _currentCallsignFrequency = 700;
 
 /**
  * Sets the current frequency for the callsign in the current round.
- * @param {number} freq - The frequency to use for the current callsign.
  */
-export function setCurrentCallsignFrequency(freq) {
-    _currentCallsignFrequency = freq;
+export function setCurrentCallsignFrequency() {
+    const min = settings.minFrequency || 500;
+    const max = settings.maxFrequency || 900;
+    _currentCallsignFrequency = Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 /**
