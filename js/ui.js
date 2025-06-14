@@ -487,7 +487,7 @@ export function initUI() {
             const min = Number(minFreqInput.value);
             const max = Number(maxFreqInput.value);
             let valid = true;
-            if (min >= max) {
+            if (max < min) {
                 minFreqInput.classList.add('is-invalid');
                 maxFreqInput.classList.add('is-invalid');
                 freqFeedback.innerText = t('frequency_invalid');
