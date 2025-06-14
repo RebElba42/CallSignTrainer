@@ -9,45 +9,47 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
         body {
-            background: #181a1b;
-            color: #f1f5f9;
+            background: #3b3b3b;
+            color: #f8f9fa;
         }
         .legal-card {
-            background: rgba(34, 39, 54, 0.97);
-            border-radius: 1.5rem;
-            box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.25);
-            padding: 2.5rem 2rem;
+            background: var(--bs-dark);
+            color: var(--bs-light);
+            border-radius: 1.2rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.18);
+            border: 1px solid var(--bs-secondary);
+            padding: 2.2rem 1.5rem;
             max-width: 600px;
             margin: 4rem auto 2rem auto;
         }
         h1 {
-            font-size: 2.1rem;
+            font-size: 2rem;
             font-weight: 700;
             margin-bottom: 1.2rem;
         }
         hr {
-            border-top: 1px solid #334155;
+            border-top: 1px solid var(--bs-secondary);
             margin: 2rem 0 1.5rem 0;
         }
         .btn-back {
             margin-top: 2rem;
         }
         footer {
-            color: #94a3b8;
+            color: #adb5bd;
             font-size: 0.95em;
             text-align: center;
             margin-bottom: 1.5rem;
         }
         a {
-            color: #38bdf8;
+            color: #66d9ef;
         }
         a:hover {
-            color: #0ea5e9;
+            color: #38bdf8;
         }
     </style>
 </head>
 <body>
-    <div class="legal-card">
+    <div class="legal-card shadow-lg">
         <div id="privacy-de">
             <h1>Datenschutzerklärung</h1>
             <p>
