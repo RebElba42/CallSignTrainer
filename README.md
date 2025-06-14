@@ -19,7 +19,7 @@ CallSignTrainer is a web application for practicing and training amateur radio c
 
 1. **Start**: Click "Start" to begin the training.
 2. **Settings**: Adjust speed, pause, repetitions, noise, and QSB as desired.
-3. **Pause/Resume**: You can pause and resume the training at any time.
+3. **Stop/Start**: You can Stop and Start the training at any time.
 4. **Language**: Select German or English.
 
 ## Notes
@@ -29,9 +29,32 @@ CallSignTrainer is a web application for practicing and training amateur radio c
 
 ## Installation
 
+### Option 1: Using a Local Web Server (e.g. MAMP/XAMPP)
+
 1. Clone or download the repository.
-2. Open in your browser (e.g., via a local web server like MAMP/XAMPP or upload directly to a web server).
-3. The application is ready to use.
+2. Place the files in your local web server directory (e.g., `htdocs` for MAMP).
+3. Open `index.html` in your browser via your local server (e.g., http://localhost/CallSignTrainer/).
+4. The application is ready to use.
+
+### Option 2: Using npm and a Static Server
+
+1. Make sure you have [Node.js](https://nodejs.org/) and npm installed.
+2. Clone or download the repository.
+3. Open a terminal in the project folder.
+4. Install dependencies:
+    ```bash
+    npm install
+    ```
+5. Start the local server (choose one):
+    - For [http-server](https://www.npmjs.com/package/http-server):
+      ```bash
+      npm run start
+      ```
+    - For [live-server](https://www.npmjs.com/package/live-server) with auto-reload:
+      ```bash
+      npm run live
+      ```
+6. Open [http://localhost:8080/](http://localhost:8080/) in your browser.
 
 ---
 

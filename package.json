@@ -1,0 +1,24 @@
+{
+  "name": "CallsignTrainer",
+  "version": "1.0.9",
+  "description": "Practice amateur radio callsigns in Morse code (CW) in your browser",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -c-1 -p 8080",
+    "serve": "http-server -c-1 -p 8080",
+    "live": "live-server --port=8080"
+  },
+  "keywords": [
+    "morse",
+    "callsign",
+    "trainer",
+    "hamradio",
+    "browser"
+  ],
+  "author": "DB4REB",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  }
+}

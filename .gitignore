@@ -35,3 +35,5 @@ ehthumbs.db
 Icon?
 gen_callsigns_new.py
 rufzeichen_international.json
+package-lock.json
+node_modules/*
