@@ -72,5 +72,7 @@
     "min_frequency": "Minimale Frequenz (Hz)",
     "max_frequency": "Maximale Frequenz (Hz)",
     "frequency_hint": "Die Morse-Frequenz wird für jedes Rufzeichen zufällig zwischen Minimum und Maximum gewählt.",
-    "frequency_invalid": "Der Minimalwert muss kleiner als der Maximalwert oder gleich sein."
+    "frequency_invalid": "Der Minimalwert muss kleiner als der Maximalwert oder gleich sein.",
+    "impressum": "Impressum",
+    "datenschutz": "Datenschutz"
 }

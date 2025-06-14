@@ -48,26 +48,39 @@
 </head>
 <body>
     <div class="legal-card">
-        <h1>Datenschutzerklärung</h1>
-        <p>
-            Diese Website speichert und verarbeitet keine personenbezogenen Daten.<br>
-            Es werden keine Cookies gesetzt und keine externen Analyse-Tools verwendet.<br>
-            <strong>Hinweis:</strong> Einstellungen (wie Sprache oder Geschwindigkeit etc.) werden ausschließlich lokal im Browser (localStorage) gespeichert und nicht an den Server übertragen.<br>
-            Bei Fragen zum Datenschutz wenden Sie sich bitte an: rebelba42@gmail.com
-        </p>
-        <hr>
-        <h1>Privacy Policy</h1>
-        <p>
-            This website does not store or process any personal data.<br>
-            No cookies are set and no external analytics tools are used.<br>
-            <strong>Note:</strong> Settings (like language or speed etc.) are stored locally in the browser (localStorage) and not transmitted to the server.<br>
-            For questions regarding privacy, please contact: rebelba42@gmail.com
-        </p>
-        <a href="index.html" class="btn btn-outline-info btn-back">Zurück zur Startseite / Back to main page</a>
+        <div id="privacy-de">
+            <h1>Datenschutzerklärung</h1>
+            <p>
+                Diese Website speichert und verarbeitet keine personenbezogenen Daten.<br>
+                Es werden keine Cookies gesetzt und keine externen Analyse-Tools verwendet.<br>
+                <strong>Hinweis:</strong> Einstellungen (wie Sprache oder Geschwindigkeit etc.) werden ausschließlich lokal im Browser (localStorage) gespeichert und nicht an den Server übertragen.<br>
+                Bei Fragen zum Datenschutz wenden Sie sich bitte an: rebelba42@gmail.com
+            </p>
+        </div>
+        <div id="privacy-en" style="display:none;">
+            <h1>Privacy Policy</h1>
+            <p>
+                This website does not store or process any personal data.<br>
+                No cookies are set and no external analytics tools are used.<br>
+                <strong>Note:</strong> Settings (like language or speed etc.) are stored locally in the browser (localStorage) and not transmitted to the server.<br>
+                For questions regarding privacy, please contact: rebelba42@gmail.com
+            </p>
+        </div>
+        <a href="index.html" class="btn btn-outline-info btn-back" id="back-btn">Zurück zur Startseite / Back to main page</a>
     </div>
     <footer>
         &copy; 2025 CallSignTrainer Open Source Project by DB4REB &middot;
         <a href="https://github.com/RebElba42/CallSignTrainer" target="_blank">GitHub</a>
     </footer>
+    <script>
+    (function() {
+        let lang = localStorage.getItem('lang') || (navigator.language || 'de').substring(0,2);
+        if (lang !== 'en') lang = 'de';
+        document.getElementById('privacy-de').style.display = (lang === 'de') ? '' : 'none';
+        document.getElementById('privacy-en').style.display = (lang === 'en') ? '' : 'none';
+        var backBtn = document.getElementById('back-btn');
+        if (backBtn) backBtn.textContent = (lang === 'de') ? 'Zurück zur Startseite' : 'Back to main page';
+    })();
+    </script>
 </body>
 </html>

@@ -48,58 +48,71 @@
 </head>
 <body>
     <div class="legal-card">
-        <h1>Impressum</h1>
-        <p>
-            Angaben gemäß § 5 TMG<br>
-            Ralf El Barnoussi<br>
-            Lohschwer Weg 25<br>
-            46509 Xanten<br>
-            Deutschland
-        </p>
-        <p>
-            Kontakt:<br>
-            E-Mail: rebelba42@gmail.com
-        </p>
-        <p>
-            Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:<br>
-            Ralf El Barnoussi, Adresse wie oben
-        </p>
-        <p>
-            Dieses Projekt ist Open Source und dient ausschließlich nicht-kommerziellen Zwecken.
-        </p>
-        <p>
-            <strong>Haftungsausschluss:</strong><br>
-            Dieses Projekt dient ausschließlich zu Lern- und Demonstrationszwecken. Es wird keine Haftung für die Richtigkeit, Vollständigkeit oder Aktualität der bereitgestellten Inhalte übernommen. Die Nutzung erfolgt auf eigene Gefahr. Für Schäden, die aus der Nutzung dieser Anwendung entstehen, wird keine Haftung übernommen.
-        </p>
-        <hr>
-        <h1>Legal Notice</h1>
-        <p>
-            Information according to § 5 TMG (German Telemedia Act)<br>
-            Ralf El Barnoussi<br>
-            Lohschwer Weg 25<br>
-            46509 Xanten<br>
-            Germany
-        </p>
-        <p>
-            Contact:<br>
-            E-mail: rebelba42@gmail.com
-        </p>
-        <p>
-            Responsible for content according to § 55 Abs. 2 RStV:<br>
-            Ralf El Barnoussi, address as above
-        </p>
-        <p>
-            This project is open source and for non-commercial purposes only.
-        </p>
-        <p>
-            <strong>Disclaimer:</strong><br>
-            This project is for educational and demonstration purposes only. No liability is assumed for the accuracy, completeness, or timeliness of the provided content. Use at your own risk. No liability is accepted for any damages resulting from the use of this application.
-        </p>
-        <a href="index.html" class="btn btn-outline-info btn-back">Zurück zur Startseite / Back to main page</a>
+        <div id="impressum-de">
+            <h1>Impressum</h1>
+            <p>
+                Angaben gemäß § 5 TMG<br>
+                Ralf El Barnoussi<br>
+                Lohscher Weg 25<br>
+                46509 Xanten<br>
+                Deutschland
+            </p>
+            <p>
+                Kontakt:<br>
+                E-Mail: rebelba42@gmail.com
+            </p>
+            <p>
+                Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:<br>
+                Ralf El Barnoussi, Adresse wie oben
+            </p>
+            <p>
+                Dieses Projekt ist Open Source und dient ausschließlich nicht-kommerziellen Zwecken.
+            </p>
+            <p>
+                <strong>Haftungsausschluss:</strong><br>
+                Dieses Projekt dient ausschließlich zu Lern- und Demonstrationszwecken. Es wird keine Haftung für die Richtigkeit, Vollständigkeit oder Aktualität der bereitgestellten Inhalte übernommen. Die Nutzung erfolgt auf eigene Gefahr. Für Schäden, die aus der Nutzung dieser Anwendung entstehen, wird keine Haftung übernommen.
+            </p>
+        </div>
+        <div id="impressum-en" style="display:none;">
+            <h1>Legal Notice</h1>
+            <p>
+                Information according to § 5 TMG (German Telemedia Act)<br>
+                Ralf El Barnoussi<br>
+                Lohscher Weg 25<br>
+                46509 Xanten<br>
+                Germany
+            </p>
+            <p>
+                Contact:<br>
+                E-mail: rebelba42@gmail.com
+            </p>
+            <p>
+                Responsible for content according to § 55 Abs. 2 RStV:<br>
+                Ralf El Barnoussi, address as above
+            </p>
+            <p>
+                This project is open source and for non-commercial purposes only.
+            </p>
+            <p>
+                <strong>Disclaimer:</strong><br>
+                This project is for educational and demonstration purposes only. No liability is assumed for the accuracy, completeness, or timeliness of the provided content. Use at your own risk. No liability is accepted for any damages resulting from the use of this application.
+            </p>
+        </div>
+        <a href="index.html" class="btn btn-outline-info btn-back" id="back-btn">Zurück zur Startseite / Back to main page</a>
     </div>
     <footer>
         &copy; 2025 CallSignTrainer Open Source Project by DB4REB&middot;
         <a href="https://github.com/RebElba42/CallSignTrainer" target="_blank">GitHub</a>
     </footer>
+    <script>
+    (function() {
+        let lang = localStorage.getItem('lang') || (navigator.language || 'de').substring(0,2);
+        if (lang !== 'en') lang = 'de';
+        document.getElementById('impressum-de').style.display = (lang === 'de') ? '' : 'none';
+        document.getElementById('impressum-en').style.display = (lang === 'en') ? '' : 'none';
+        var backBtn = document.getElementById('back-btn');
+        if (backBtn) backBtn.textContent = (lang === 'de') ? 'Zurück zur Startseite' : 'Back to main page';
+    })();
+    </script>
 </body>
 </html>

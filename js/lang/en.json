@@ -72,5 +72,7 @@
     "min_frequency": "Minimum frequency (Hz)",
     "max_frequency": "Maximum frequency (Hz)",
     "frequency_hint": "The Morse frequency is randomly chosen between minimum and maximum for each callsign.",
-    "frequency_invalid": "Minimum value must be less than maximum value or equal."
+    "frequency_invalid": "Minimum value must be less than maximum value or equal.",
+    "impressum": "Legal Notice",
+    "datenschutz": "Privacy Policy"    
 }

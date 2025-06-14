@@ -39,6 +39,15 @@ export function isIOSSafari() {
     const isSafari = !!ua.match(/Safari/i) && !ua.match(/CriOS|FxiOS|EdgiOS/);
     return isIOS && isSafari;
 }
+/**
+ * Updates the footer links with the current language translations.
+ */
+export function updateFooterLinks() {
+    const impressum = document.getElementById('footer-impressum-link');
+    const datenschutz = document.getElementById('footer-datenschutz-link');
+    if (impressum) impressum.textContent = t('impressum');
+    if (datenschutz) datenschutz.textContent = t('datenschutz');
+}
 
 /**
  * Enables or disables main action buttons in the UI.
@@ -596,6 +605,7 @@ export function initUI() {
         renderLanguageSelect();
         renderSettings();
         renderControls();
+        updateFooterLinks();        
         let state = getQuizState();
         if (!state.isStarted) {
             quizContainer.innerHTML = `<div class="alert alert-info text-center py-3">${t('press_start')}</div>`;
