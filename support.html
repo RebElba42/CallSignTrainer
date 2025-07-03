@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hilfe / Support – CallSign Trainer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link id="theme-css" href="css/themes/bootstrap-dark.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        body {
+            background: #212529;
+            color: #f8f9fa;
+        }
+
+        .legal-card {
+            background: var(--bs-dark);
+            color: var(--bs-light);
+            border-radius: 1.2rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.18);
+            border: 1px solid var(--bs-secondary);
+            padding: 2.2rem 1.5rem;
+            max-width: 800px;
+            margin: 5vh auto 2rem auto;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background-color: #23272b;
+            color: #38bdf8;
+        }
+
+        .accordion-item {
+            background: var(--bs-dark);
+            color: var(--bs-light);
+            border: 1px solid var(--bs-secondary);
+        }
+
+        .btn-back {
+            margin-top: 2rem;
+        }
+
+        footer {
+            color: #adb5bd;
+            font-size: 0.95em;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        a {
+            color: #66d9ef;
+        }
+
+        a:hover {
+            color: #38bdf8;
+        }
+
+        .setting-label {
+            font-weight: 600;
+            color: #38bdf8;
+        }
+
+        .setting-desc {
+            margin-bottom: 0.7em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="legal-card shadow-lg">
+        <!-- Deutsch -->
+        <div id="support-de">
+            <h1>Hilfe &amp; Anleitung</h1>
+            <p>
+                <strong>CallSign Trainer</strong> ist eine Lern-App, mit der du Amateurfunkrufzeichen als Morsecode (CW)
+                direkt im Browser üben kannst – mobil und am Desktop. Die App ist kostenlos, Open Source und speichert
+                deine Einstellungen lokal.
+            </p>
+            <p>
+                <strong>Bedienung:</strong><br>
+                Wähle die gewünschte Sprache oben rechts. Starte das Quiz mit <b>Start</b>, beende mit <b>Stop</b>.
+                Im <b>Automatikmodus</b> läuft das Quiz automatisch weiter, im <b>manuellen Modus</b> kannst du jede
+                Aufgabe selbst weiterklicken.
+            </p>
+            <div class="accordion my-4" id="settingsAccordionDE">
+                <!-- Allgemeine Einstellungen -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingGeneralDE">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseGeneralDE">
+                            Allgemeine Einstellungen
+                        </button>
+                    </h2>
+                    <div id="collapseGeneralDE" class="accordion-collapse collapse"
+                        data-bs-parent="#settingsAccordionDE">
+                        <div class="accordion-body">
+                            <div class="setting-label">Geschwindigkeit (WPM)</div>
+                            <div class="setting-desc">Stellt die Abspielgeschwindigkeit des Morsecodes in Worten pro
+                                Minute ein.</div>
+                            <div class="setting-label">Pause (Sekunden)</div>
+                            <div class="setting-desc">Legt die Pause zwischen den Aufgaben fest.</div>
+                            <div class="setting-label">Wiederholen</div>
+                            <div class="setting-desc">Wie oft das aktuelle Rufzeichen wiederholt wird.</div>
+                            <div class="setting-label">Farnsworth-WPM</div>
+                            <div class="setting-desc">Erlaubt langsame Abstände bei schneller Zeichen-Geschwindigkeit
+                                (Farnsworth-Methode).</div>
+                            <div class="setting-label">Tonhöhe (min/max Hz)</div>
+                            <div class="setting-desc">Stellt die minimale und maximale Tonhöhe für die Morsezeichen ein.
+                            </div>
+                            <div class="setting-label">Test Morse</div>
+                            <div class="setting-desc">Spielt ein Test-Rufzeichen zur Probe ab.</div>
+                            <div class="setting-label">Verzögerung vor Ansage</div>
+                            <div class="setting-desc">Wartezeit vor der Voransage (z.B. "VVV" oder Sprache).</div>
+                            <div class="setting-label">Verzögerung vor Morse</div>
+                            <div class="setting-desc">Wartezeit vor dem Start des Morsecodes.</div>
+                            <div class="setting-label">Verzögerung vor Lösung</div>
+                            <div class="setting-desc">Wartezeit, bevor die Lösung angezeigt wird.</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Störgeräusche -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingNoiseDE">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseNoiseDE">
+                            Störgeräusche &amp; Funkbedingungen
+                        </button>
+                    </h2>
+                    <div id="collapseNoiseDE" class="accordion-collapse collapse" data-bs-parent="#settingsAccordionDE">
+                        <div class="accordion-body">
+                            <div class="setting-label">Störgeräusch-Typ</div>
+                            <div class="setting-desc">Wähle zwischen Weißes Rauschen, Pinkes Rauschen, Braunes Rauschen
+                                oder QRN (natürliche Störungen).</div>
+                            <div class="setting-label">Störgeräusch-Level</div>
+                            <div class="setting-desc">Stellt die Lautstärke des Störgeräuschs ein.</div>
+                            <div class="setting-label">QRM-Level</div>
+                            <div class="setting-desc">Simuliert Störungen durch andere Stationen (QRM).</div>
+                            <div class="setting-label">QSB-Level</div>
+                            <div class="setting-desc">Simuliert Schwund (QSB) – das Signal wird lauter und leiser.</div>
+                            <div class="setting-label">Test Morse (mit Störung)</div>
+                            <div class="setting-desc">Spielt ein Test-Rufzeichen mit Störgeräuschen ab.</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Ansage & Kategorie -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingAnnounceDE">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseAnnounceDE">
+                            Ansage, Kategorie &amp; Design
+                        </button>
+                    </h2>
+                    <div id="collapseAnnounceDE" class="accordion-collapse collapse"
+                        data-bs-parent="#settingsAccordionDE">
+                        <div class="accordion-body">
+                            <div class="setting-label">Voransage</div>
+                            <div class="setting-desc">Wähle, ob vor jedem Rufzeichen "VVV" in Morse oder eine
+                                Sprachansage kommt.</div>
+                            <div class="setting-label">Rufzeichen-Kategorie</div>
+                            <div class="setting-desc">Wähle, ob internationale oder nur europäische Rufzeichen trainiert
+                                werden.</div>
+                            <div class="setting-label">Design/Thema</div>
+                            <div class="setting-desc">Wechsle das Farbschema der App (Darkmode, verschiedene
+                                Bootstrap-Themes).</div>
+                            <div class="setting-label">Stimme</div>
+                            <div class="setting-desc">Wähle die Stimme für Sprachansagen aus.</div>
+                            <div class="setting-label">Stimme testen</div>
+                            <div class="setting-desc">Spielt eine Testansage mit der gewählten Stimme ab.</div>
+                            <div class="setting-label">Einstellungen zurücksetzen</div>
+                            <div class="setting-desc">Setzt alle Einstellungen auf Standardwerte zurück.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="index.html" class="btn btn-outline-info btn-back" id="back-btn-de">Zurück zur App</a>
+        </div>
+        <!-- Englisch -->
+        <div id="support-en" style="display:none;">
+            <h1>Help &amp; Guide</h1>
+            <p>
+                <strong>CallSign Trainer</strong> is a learning app to practice amateur radio callsigns as Morse code
+                (CW) directly in your browser – on mobile and desktop. The app is free, open source, and stores your
+                settings locally.
+            </p>
+            <p>
+                <strong>Usage:</strong><br>
+                Choose your language at the top right. Start the quiz with <b>Start</b>, stop with <b>Stop Button</b>. In
+                <b>automatic mode</b> the quiz continues automatically, in <b>manual mode</b> you can proceed to the
+                next task yourself.
+            </p>
+            <div class="accordion my-4" id="settingsAccordionEN">
+                <!-- General Settings -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingGeneralEN">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseGeneralEN">
+                            General Settings
+                        </button>
+                    </h2>
+                    <div id="collapseGeneralEN" class="accordion-collapse collapse"
+                        data-bs-parent="#settingsAccordionEN">
+                        <div class="accordion-body">
+                            <div class="setting-label">Speed (WPM)</div>
+                            <div class="setting-desc">Sets the playback speed of Morse code in words per minute.</div>
+                            <div class="setting-label">Pause (seconds)</div>
+                            <div class="setting-desc">Sets the pause between tasks.</div>
+                            <div class="setting-label">Repeat</div>
+                            <div class="setting-desc">How often the current callsign is repeated.</div>
+                            <div class="setting-label">Farnsworth-WPM</div>
+                            <div class="setting-desc">Allows slow spacing with fast character speed (Farnsworth method).
+                            </div>
+                            <div class="setting-label">Tone (min/max Hz)</div>
+                            <div class="setting-desc">Sets the minimum and maximum tone frequency for Morse code.</div>
+                            <div class="setting-label">Test Morse</div>
+                            <div class="setting-desc">Plays a test callsign for trial.</div>
+                            <div class="setting-label">Delay before announcement</div>
+                            <div class="setting-desc">Wait time before the pre-announcement ("VVV" or speech).</div>
+                            <div class="setting-label">Delay before Morse</div>
+                            <div class="setting-desc">Wait time before Morse code starts.</div>
+                            <div class="setting-label">Delay before solution</div>
+                            <div class="setting-desc">Wait time before the solution is shown.</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Noise & Radio Conditions -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingNoiseEN">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseNoiseEN">
+                            Noise &amp; Radio Conditions
+                        </button>
+                    </h2>
+                    <div id="collapseNoiseEN" class="accordion-collapse collapse" data-bs-parent="#settingsAccordionEN">
+                        <div class="accordion-body">
+                            <div class="setting-label">Noise type</div>
+                            <div class="setting-desc">Choose between white noise, pink noise, brown noise or QRN
+                                (natural noise).</div>
+                            <div class="setting-label">Noise level</div>
+                            <div class="setting-desc">Sets the volume of the noise.</div>
+                            <div class="setting-label">QRM level</div>
+                            <div class="setting-desc">Simulates interference from other stations (QRM).</div>
+                            <div class="setting-label">QSB level</div>
+                            <div class="setting-desc">Simulates fading (QSB) – the signal gets louder and softer.</div>
+                            <div class="setting-label">Test Morse (with noise)</div>
+                            <div class="setting-desc">Plays a test callsign with noise.</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Announcement & Category -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingAnnounceEN">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseAnnounceEN">
+                            Announcement, Category &amp; Design
+                        </button>
+                    </h2>
+                    <div id="collapseAnnounceEN" class="accordion-collapse collapse"
+                        data-bs-parent="#settingsAccordionEN">
+                        <div class="accordion-body">
+                            <div class="setting-label">Pre-announcement</div>
+                            <div class="setting-desc">Choose whether "VVV" in Morse or a speech announcement is played
+                                before each callsign.</div>
+                            <div class="setting-label">Callsign category</div>
+                            <div class="setting-desc">Choose whether to train international or only European callsigns.
+                            </div>
+                            <div class="setting-label">Design/Theme</div>
+                            <div class="setting-desc">Switch the app's color scheme (dark mode, various Bootstrap
+                                themes).</div>
+                            <div class="setting-label">Voice</div>
+                            <div class="setting-desc">Select the voice for speech announcements.</div>
+                            <div class="setting-label">Test voice</div>
+                            <div class="setting-desc">Plays a test announcement with the selected voice.</div>
+                            <div class="setting-label">Reset settings</div>
+                            <div class="setting-desc">Resets all settings to default values.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="index.html" class="btn btn-outline-info btn-back" id="back-btn-en">Back to app</a>
+        </div>
+    </div>
+    <footer>
+        <div class="text-center mt-4 mb-2" style="color:#adb5bd;font-size:0.95em;">
+            &copy; 2025 CallSignTrainer Open Source Project by DB4REB &middot;
+            <a href="https://github.com/RebElba42/CallSignTrainer" target="_blank" style="color:#66d9ef;">GitHub</a>
+        </div>
+    </footer>
+    <script>
+        // Sprachumschaltung wie bei Impressum/Datenschutz
+        (function () {
+            let lang = localStorage.getItem('lang') || (navigator.language || 'de').substring(0, 2);
+            if (lang !== 'en') lang = 'de';
+            document.getElementById('support-de').style.display = (lang === 'de') ? '' : 'none';
+            document.getElementById('support-en').style.display = (lang === 'en') ? '' : 'none';
+            var backBtnDe = document.getElementById('back-btn-de');
+            var backBtnEn = document.getElementById('back-btn-en');
+            if (backBtnDe) backBtnDe.style.display = (lang === 'de') ? '' : 'none';
+            if (backBtnEn) backBtnEn.style.display = (lang === 'en') ? '' : 'none';
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
